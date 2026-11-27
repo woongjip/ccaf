@@ -25,7 +25,7 @@ const items = hist.querySelectorAll('a[onclick*=viewGallery]').map((a) => ({
 const pageIds = [...new Set([...histHtml.matchAll(/["'](\/\d{1,4})["']/g)].map((m) => m[1]))];
 // data-link 가 비어 있으면, 후보 페이지를 열어 제목으로 연결
 const candidates = {};
-for (const id of pageIds) {
+for (const id of pageIds.filter((x) => !['/6', '/10', '/45', '/23', '/169', '/152', '/49'].includes(x))) {
   try { const h = await (await get(BASE + id)).text(); candidates[id] = clean((parse(h).querySelector('#doz_body') || parse(h)).innerHTML).slice(0, 4000); } catch {}
 }
 for (const it of items) {
