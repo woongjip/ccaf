@@ -1,3 +1,5 @@
+/admin  https://app.pagescms.org/woongjip/ccaf/main  302
+/admin/*  https://app.pagescms.org/woongjip/ccaf/main  302
 # 기존 QUV 사이트 주소 → 새 주소 (검색엔진·외부 링크 보존)
 /169              /festival        301
 /152              /program         301

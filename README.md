@@ -4,8 +4,8 @@
 
 ## 직원용: 내용 수정하는 법
 
-1. https://app.pagescms.org 접속 → **Sign in with GitHub**
-2. `woongjip/ccaf` 저장소 선택
+1. 홈페이지 주소 뒤에 **/admin** 을 붙여 접속 (예: ccaf.or.kr/admin)
+2. 처음 한 번만: 초대받은 이메일 주소를 입력하고, 메일로 온 로그인 링크 클릭 (GitHub 계정 필요 없음)
 3. 왼쪽 메뉴에서 수정할 항목 선택 → 고치고 **Save**
 4. 1~2분 뒤 홈페이지에 자동 반영됩니다
 
