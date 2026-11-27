@@ -23,6 +23,16 @@ const items = hist.querySelectorAll('a[onclick*=viewGallery]').map((a) => ({
 })).filter((x) => x.title);
 
 const pageIds = [...new Set([...histHtml.matchAll(/["'](\/\d{1,4})["']/g)].map((m) => m[1]))];
+// data-link 가 비어 있으면, 후보 페이지를 열어 제목으로 연결
+const candidates = {};
+for (const id of pageIds) {
+  try { const h = await (await get(BASE + id)).text(); candidates[id] = clean((parse(h).querySelector('#doz_body') || parse(h)).innerHTML).slice(0, 4000); } catch {}
+}
+for (const it of items) {
+  if (/\/\d+/.test(it.link)) continue;
+  const hit = Object.entries(candidates).find(([, t]) => t.includes(it.title));
+  if (hit) it.link = hit[0];
+}
 const years = [];
 const images = new Map(); // id.ext → { kind }
 for (const it of items) {
