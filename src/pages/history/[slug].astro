@@ -1,0 +1,158 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('festivals')).sort((a, b) => b.data.sort - a.data.sort);
+  return all.map((f, i) => ({ params: { slug: f.id }, props: { f, newer: all[i - 1], older: all[i + 1] } }));
+}
+const { f, newer, older } = Astro.props;
+const d = f.data;
+const { Content } = await render(f);
+const hasBody = !!f.body?.trim();
+const lines = (t?: string) => (t ?? '').split('\n');
+const isHead = (l: string) => /^-?\s?\d{1,2}\/\d{1,2}/.test(l) || /^\[/.test(l);
+const progLines = lines(d.program).map((l) => l.trim()).filter(Boolean).map((l) => ({ head: isHead(l), text: isHead(l) ? l.replace(/^-\s?/, '') : l }));
+---
+<Base title={d.title} description={`${d.title} ${d.period} — 춘천공연예술제 지난 축제 아카이브`} image={d.poster}>
+  <section class="fh">
+    <div class="wrap fh-grid">
+      <div>
+        <p class="eyebrow"><a href="/history">지난 축제</a></p>
+        <p class="display fh-year">{d.year}</p>
+        <h1>{d.title}</h1>
+        {d.tagline && <p class="fh-tag">{d.tagline}</p>}
+        <dl class="fh-facts">
+          {d.period && <div><dt>기간</dt><dd>{d.period}</dd></div>}
+          {d.venue && <div><dt>장소</dt><dd>{d.venue}</dd></div>}
+        </dl>
+        <div class="btns">
+          {d.programBook && <a class="btn" href={d.programBook} target="_blank" rel="noopener">프로그램북</a>}
+          {d.programBookEn && <a class="btn ghost" href={d.programBookEn} target="_blank" rel="noopener">ENG Program Book</a>}
+          {d.extraLinks.map((l) => <a class="btn ghost" href={l.url} target="_blank" rel="noopener">{l.label}</a>)}
+        </div>
+      </div>
+      {(d.posterLarge || d.poster) && <figure class="fh-poster"><img src={d.posterLarge || d.poster} alt={`${d.title} 포스터`} /></figure>}
+    </div>
+  </section>
+
+  <nav class="fh-tabs wrap" aria-label="이 축제 안에서 이동">
+    {hasBody && <a href="#overview">축제 개요</a>}
+    {d.program && <a href="#program">축제 프로그램</a>}
+    {d.credits && <a href="#credits">만든 사람들</a>}
+    {d.gallery.length > 0 && <a href="#photos">공연 사진 {d.gallery.length}</a>}
+  </nav>
+
+  {hasBody && <section id="overview" class="section"><div class="wrap two"><h2>축제 개요</h2><div class="prose"><Content /></div></div></section>}
+
+  {d.program && (
+    <section id="program" class="section line">
+      <div class="wrap two"><h2>축제 프로그램</h2>
+        <div class="prog">{progLines.map((l) => <p class={l.head ? 'prog-h' : undefined}>{l.text}</p>)}</div>
+      </div>
+    </section>
+  )}
+
+  {d.gallery.length > 0 && (
+    <section id="photos" class="section line">
+      <div class="wrap">
+        <h2>공연 사진</h2>
+        <ul class="gal">
+          {d.gallery.map((g, i) => (
+            <li><button type="button" class="gal-btn" data-i={i} aria-label={`${g.title || '공연 사진'} 크게 보기`}>
+              <img src={g.image} alt={[g.title, g.artist].filter(Boolean).join(' — ')} loading="lazy" />
+            </button>
+              {(g.title || g.artist) && <p class="gal-t"><b>{g.title}</b>{g.artist && <span>{g.artist}</span>}</p>}
+              {g.credit && <p class="gal-c">Photo by {g.credit}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <dialog class="lb" aria-label="사진 크게 보기">
+        <img alt="" />
+        <p class="lb-cap"></p>
+        <button class="lb-x" type="button" aria-label="닫기">✕</button>
+        <button class="lb-p" type="button" aria-label="이전 사진">←</button>
+        <button class="lb-n" type="button" aria-label="다음 사진">→</button>
+      </dialog>
+      <script type="application/json" class="gal-data" set:html={JSON.stringify(d.gallery)} />
+    </section>
+  )}
+
+  {d.credits && (
+    <section id="credits" class="section line">
+      <div class="wrap two"><h2>만든 사람들</h2>
+        <div class="credits">{lines(d.credits).filter((l) => l.trim()).map((l) => <p>{l}</p>)}</div>
+      </div>
+    </section>
+  )}
+
+  <nav class="wrap pager" aria-label="다른 해 축제">
+    {older ? <a href={`/history/${older.id}`}>← {older.data.year} {older.data.title.replace(/^\d{4}\s*/, '')}</a> : <span></span>}
+    <a href="/history">전체 목록</a>
+    {newer ? <a href={`/history/${newer.id}`}>{newer.data.year} {newer.data.title.replace(/^\d{4}\s*/, '')} →</a> : <span></span>}
+  </nav>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLElement>('#photos').forEach((sec) => {
+    const data = JSON.parse(sec.querySelector('.gal-data')!.textContent || '[]');
+    const dlg = sec.querySelector('dialog')!; const img = dlg.querySelector('img')!; const cap = dlg.querySelector('.lb-cap')!;
+    let cur = 0;
+    const show = (i: number) => { cur = (i + data.length) % data.length; const g = data[cur]; img.src = g.image; img.alt = g.title || ''; cap.textContent = [g.title, g.artist, g.credit && 'Photo by ' + g.credit].filter(Boolean).join(' · '); };
+    sec.querySelectorAll<HTMLButtonElement>('.gal-btn').forEach((b) => b.addEventListener('click', () => { show(+b.dataset.i!); dlg.showModal(); }));
+    dlg.querySelector('.lb-x')!.addEventListener('click', () => dlg.close());
+    dlg.querySelector('.lb-p')!.addEventListener('click', () => show(cur - 1));
+    dlg.querySelector('.lb-n')!.addEventListener('click', () => show(cur + 1));
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+  });
+</script>
+
+<style>
+  .fh { padding: clamp(36px, 6vw, 80px) 0; border-bottom: 1px solid var(--line); }
+  .fh-grid { display: grid; grid-template-columns: 1.3fr .7fr; gap: clamp(24px, 5vw, 72px); align-items: end; }
+  .fh .eyebrow a { text-decoration: none; }
+  .fh-year { font-size: clamp(72px, 11vw, 160px); margin: 8px 0 0; line-height: .9; color: var(--hl); }
+  .fh h1 { font-size: clamp(28px, 3.4vw, 44px); letter-spacing: -0.03em; line-height: 1.25; margin: 16px 0 0; }
+  .fh-tag { font-size: 20px; font-weight: 600; margin: 10px 0 0; }
+  .fh-facts { margin: 28px 0 0; border-top: 1px solid var(--line); }
+  .fh-facts div { display: grid; grid-template-columns: 80px 1fr; padding: 12px 0; border-bottom: 1px solid var(--hair); }
+  .fh-facts dt { font-weight: 800; } .fh-facts dd { margin: 0; }
+  .fh .btns { margin-top: 24px; }
+  .fh-poster { margin: 0; border: 1px solid var(--line); background: var(--soft); }
+  .fh-poster img { width: 100%; }
+  @media (max-width: 800px) { .fh-grid { grid-template-columns: 1fr; } .fh-poster { max-width: 360px; } }
+
+  .fh-tabs { display: flex; gap: 0; overflow-x: auto; border-bottom: 1px solid var(--line); position: sticky; top: var(--header); background: var(--paper); z-index: 5; padding: 0; max-width: none; }
+  .fh-tabs a { padding: 14px var(--gutter); font-weight: 700; text-decoration: none; white-space: nowrap; border-right: 1px solid var(--hair); }
+  .fh-tabs a:hover { background: var(--ink); color: var(--paper); }
+
+  .line { border-top: 1px solid var(--line); }
+  .two { display: grid; grid-template-columns: 240px 1fr; gap: clamp(20px, 4vw, 56px); }
+  .two h2 { margin: 0; font-size: 26px; }
+  @media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
+  .prog p { margin: 0 0 4px; }
+  .prog .prog-h { font-weight: 800; margin: 22px 0 6px; padding-top: 12px; border-top: 1px solid var(--hair); }
+  .prog .prog-h:first-child { margin-top: 0; }
+  .credits { columns: 2 260px; column-gap: 48px; font-size: 15px; }
+  .credits p { margin: 0 0 4px; break-inside: avoid; }
+
+  .gal { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px 20px; }
+  .gal-btn { display: block; width: 100%; padding: 0; border: 0; background: var(--soft); cursor: zoom-in; }
+  .gal-btn img { aspect-ratio: 4/3; object-fit: cover; width: 100%; transition: opacity .2s; }
+  .gal-btn:hover img { opacity: .85; }
+  .gal-t { margin: 10px 0 0; line-height: 1.45; } .gal-t b { display: block; } .gal-t span { font-size: 14px; color: var(--muted); }
+  .gal-c { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+
+  .lb { border: 0; padding: 0; max-width: 100vw; max-height: 100vh; width: 100vw; height: 100vh; background: rgba(11, 34, 56, .96); color: #fff; }
+  .lb::backdrop { background: transparent; }
+  .lb img { position: absolute; inset: 56px 64px 72px; width: calc(100% - 128px); height: calc(100% - 128px); object-fit: contain; }
+  .lb-cap { position: absolute; left: 0; right: 0; bottom: 20px; text-align: center; margin: 0; font-size: 15px; padding: 0 16px; }
+  .lb button { position: absolute; background: none; border: 1px solid rgba(255,255,255,.4); color: #fff; width: 48px; height: 48px; font-size: 20px; cursor: pointer; }
+  .lb-x { top: 12px; right: 12px; } .lb-p { left: 8px; top: 50%; } .lb-n { right: 8px; top: 50%; }
+  @media (max-width: 600px) { .lb img { inset: 56px 8px 80px; width: calc(100% - 16px); } .lb-p, .lb-n { top: auto; bottom: 64px; } }
+
+  .pager { display: flex; justify-content: space-between; gap: 16px; padding-top: 32px; padding-bottom: 64px; border-top: 1px solid var(--line); margin-top: 0; font-weight: 700; }
+  .pager a { text-decoration: none; } .pager a:hover { text-decoration: underline; }
+</style>

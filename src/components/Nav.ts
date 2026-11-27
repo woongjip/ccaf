@@ -37,4 +37,6 @@ export const NAV_EN = [
   { label: 'Open Call', href: '/en/open-call' },
   { label: 'Get Involved', href: '/en/get-involved' },
   { label: 'Visit', href: '/en/visit' },
+  { label: 'FAQ', href: '/en/faq' },
+  { label: 'Archive', href: '/history' },
 ];

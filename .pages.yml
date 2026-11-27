@@ -137,6 +137,28 @@ content:
       - { name: link, label: 관련 링크 (선택), type: string }
       - { name: programBook, label: 프로그램북 링크 (국문), type: string }
       - { name: programBookEn, label: 프로그램북 링크 (영문), type: string }
+      - { name: posterLarge, label: 상세 페이지용 큰 포스터, type: image }
+      - { name: tagline, label: 주제 문구, type: string }
+      - { name: venue, label: 장소, type: string }
+      - { name: body, label: 축제 개요, type: rich-text }
+      - { name: program, label: 축제 프로그램 (줄바꿈 그대로 표시), type: text }
+      - { name: credits, label: 만든 사람들 (줄바꿈 그대로 표시), type: text }
+      - name: extraLinks
+        label: 추가 링크 (리플렛 등)
+        type: object
+        list: true
+        fields:
+          - { name: label, label: 이름, type: string }
+          - { name: url, label: 주소, type: string }
+      - name: gallery
+        label: 공연 사진
+        type: object
+        list: true
+        fields:
+          - { name: image, label: 사진, type: image }
+          - { name: title, label: 작품명, type: string }
+          - { name: artist, label: 단체/아티스트, type: string }
+          - { name: credit, label: 사진 촬영, type: string }
 
   - name: faq
     label: ❓ 자주 묻는 질문

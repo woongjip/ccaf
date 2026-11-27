@@ -114,7 +114,7 @@ const off = mode === 'offseason';
       <div class="section-head"><h2>스물다섯 번의 여름</h2><a class="more" href="/history">2002년부터 모두 보기</a></div>
       <div class="poster-strip">
         {festivals.map((f) => (
-          <a href="/history" class="poster">
+          <a href={`/history/${f.id}`} class="poster">
             <div class="poster-img">{f.data.poster && <img src={f.data.poster} alt={f.data.title} loading="lazy" />}</div>
             <span class="num">{f.data.year}</span>
           </a>

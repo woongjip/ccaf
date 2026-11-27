@@ -51,6 +51,14 @@ const festivals = defineCollection({
     link: z.string().optional(),
     programBook: z.string().optional(),
     programBookEn: z.string().optional(),
+    posterLarge: z.string().optional(),
+    source: z.string().optional(),
+    tagline: z.string().optional(),
+    venue: z.string().optional(),
+    program: z.string().optional(),
+    credits: z.string().optional(),
+    extraLinks: z.array(z.object({ label: z.string(), url: z.string() })).default([]),
+    gallery: z.array(z.object({ image: z.string(), title: z.string().optional(), artist: z.string().optional(), credit: z.string().optional() })).default([]),
   }),
 });
 
