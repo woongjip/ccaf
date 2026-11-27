@@ -20,10 +20,9 @@ const ogImage = new URL(image ?? site.current.keyVisual, Astro.site).toString();
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
-const t = site.theme;
 ---
 <!doctype html>
-<html lang={lang} style={`--accent:${t.accent};--accent-ink:${t.accentInk};--accent2:${t.accent2};--hl:${t.highlight};--ink:${t.ink};--paper:${t.paper}`}>
+<html lang={lang}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -1,13 +1,5 @@
 {
   "mode": "offseason",
-  "theme": {
-    "accent": "#ff6b4a",
-    "accentInk": "#0b2238",
-    "accent2": "#0b3d5c",
-    "highlight": "#0b5f8a",
-    "ink": "#0b2238",
-    "paper": "#f4f1ea"
-  },
   "current": {
     "year": 2026,
     "edition": 25,

@@ -1,16 +1,27 @@
 /*
-  CCAF 디자인 시스템
-  - 기본 팔레트 'B안 호수와 코랄': 딥네이비(호수) + 코랄 + 미색. 매년 같은 색으로 운영
-  - accent  : 넓은 면(블록·버튼 배경)에만 사용. 글자색으로 쓰지 않음
-  - hl      : 흰 바탕 위 글자로 쓸 수 있는 진한 강조색 (명도 대비 4.5:1 이상)
+  CCAF 브랜드 컬러 (고유색, 매년 동일 — 포스터 색과 무관하게 유지)
+  ─ 주색   소양 네이비  #0B2238  호수의 밤, 공연이 시작되는 어둠. 글자·로고·진한 면
+  ─ 시그니처 커튼콜 코랄 #FF6B4A  무대 조명과 박수의 온기. 넓은 면·버튼·태그 배경에만 (글자색 금지)
+  ─ 보조   깊은 호수   #0B3D5C  어두운 섹션 배경, 코랄과 짝
+  ─ 보조   호수 블루   #0B5F8A  링크·강조 글자·포커스 (미색 위 대비 6:1 이상)
+  ─ 바탕   무대 미색   #F4F1EA  기본 배경 (순백 대신 종이 질감)
+  ─ 중립   안개 #E6E4DE(soft) · 물안개 선(hair) · 회색 글자(muted) — 모두 네이비에서 파생
+  사용 비율 가이드: 미색 60 · 네이비 30 · 코랄 10. 코랄 위 글자는 항상 네이비.
+  포스터·공연 사진은 이 색 체계 '안에' 액자처럼 놓이고, 사이트 색을 바꾸지 않는다.
 */
 :root {
-  --ink: #0b2238;
-  --paper: #f4f1ea;
-  --accent: #ff6b4a;
-  --accent-ink: #0b2238;
-  --accent2: #0b3d5c;
-  --hl: #0b5f8a;
+  --c-navy: #0b2238;
+  --c-coral: #ff6b4a;
+  --c-deep: #0b3d5c;
+  --c-lake: #0b5f8a;
+  --c-paper: #f4f1ea;
+
+  --ink: var(--c-navy);
+  --paper: var(--c-paper);
+  --accent: var(--c-coral);
+  --accent-ink: var(--c-navy);
+  --accent2: var(--c-deep);
+  --hl: var(--c-lake);
   --soft: color-mix(in srgb, var(--ink) 6%, var(--paper));
   --line: var(--ink);
   --hair: color-mix(in srgb, var(--ink) 16%, transparent);
