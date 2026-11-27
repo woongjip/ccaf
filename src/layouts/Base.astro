@@ -23,7 +23,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 const t = site.theme;
 ---
 <!doctype html>
-<html lang={lang} style={`--accent:${t.accent};--ink:${t.ink};--paper:${t.paper}`}>
+<html lang={lang} style={`--accent:${t.accent};--accent-ink:${t.accentInk};--accent2:${t.accent2};--hl:${t.highlight};--ink:${t.ink};--paper:${t.paper}`}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -53,7 +53,7 @@ const t = site.theme;
     <div class="bar">
       <a class="brand" href={lang === 'en' ? '/en' : '/'} aria-label={siteName}>
         <span class="brand-ko">{lang === 'en' ? 'Chuncheon Arts Festival' : '춘천공연예술제'}</span>
-        <span class="brand-en">CCAF {site.current.year}</span>
+        <span class="brand-en">CCAF</span>
       </a>
       <nav class="gnb" aria-label="주 메뉴">
         {lang === 'ko' ? (

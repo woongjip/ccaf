@@ -12,7 +12,7 @@ const now = new Date();
     <ul class="list">
       {all.map((n) => {
         const open = n.data.deadline && n.data.deadline >= now;
-        return <li><a href={`/notice/${n.id}`}><span class="t">{n.data.pinned && <span class="badge" style="background:var(--ink)">공지</span>}{n.data.deadline && <span class={`badge ${open ? '' : 'closed'}`}>{open ? '모집중' : '마감'}</span>}{n.data.title}</span><span class="d">{fmtDate(n.data.date)}</span></a></li>;
+        return <li><a href={`/notice/${n.id}`}><span class="t">{n.data.pinned && <span class="badge pin">공지</span>}{n.data.deadline && <span class={`badge ${open ? '' : 'closed'}`}>{open ? '모집중' : '마감'}</span>}{n.data.title}</span><span class="d">{fmtDate(n.data.date)}</span></a></li>;
       })}
     </ul>
   </div></section>

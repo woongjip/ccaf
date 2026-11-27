@@ -43,12 +43,12 @@ const dayList = [...days].map(([d, list]) => {
 <style>
   .day { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 28px 0; border-top: 2px solid var(--ink); }
   .day-h { margin: 0; font-size: 22px; }
-  .day-h .display { font-size: 64px; display: block; color: var(--accent); }
+  .day-h .display { font-size: 64px; display: block; color: var(--hl); }
   .slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-  .slot { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+  .slot { background: var(--paper); border: 1px solid var(--line);  padding: 18px 20px; }
   .slot-time { font-size: 36px; margin: 0; }
   .slot-venue { margin: 6px 0 10px; font-weight: 700; }
-  .slot-venue .chip { color: var(--accent); margin-right: 4px; }
+  .slot-venue .chip { color: var(--hl); margin-right: 4px; }
   .slot ul { margin: 0 0 12px; padding: 0; list-style: none; line-height: 1.6; }
   .slot-tix { font-weight: 800; text-decoration: none; }
   @media (max-width: 700px) { .day { grid-template-columns: 1fr; } .day-h .display { display: inline; font-size: 48px; } }

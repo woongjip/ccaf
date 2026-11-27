@@ -6,62 +6,61 @@ import { site, fmtDate } from '../lib/util';
 
 const mode = site.mode; // offseason | announce | onsale
 const cur = site.current;
-const notices = (await getCollection('notices')).sort((a, b) => +b.data.date - +a.data.date).slice(0, 4);
+const notices = (await getCollection('notices')).sort((a, b) => +b.data.date - +a.data.date).slice(0, 5);
 const perfs = (await getCollection('performances')).filter((p) => p.data.year === cur.year).sort((a, b) => a.data.order - b.data.order);
-const festivals = (await getCollection('festivals')).sort((a, b) => b.data.sort - a.data.sort).slice(0, 8);
+const festivals = (await getCollection('festivals')).sort((a, b) => b.data.sort - a.data.sort).slice(0, 6);
+const venues = new Set(perfs.map((p) => p.data.venue)).size;
 const now = new Date();
+const off = mode === 'offseason';
 ---
 <Base>
-  {mode === 'offseason' ? (
-    <section class="hero hero-off">
-      <div class="wrap hero-grid">
-        <div class="hero-text">
+  <section class="hero">
+    <div class="hero-block">
+      {off ? (
+        <>
           <p class="eyebrow">제{site.next.edition}회 춘천공연예술제</p>
-          <p class="display hero-year">CCAF<br />{site.next.year}</p>
-          <p class="hero-date">{site.next.dates} · 춘천</p>
-          <p class="lead">{site.next.message}</p>
-          <div class="btns">
-            <a class="btn" href="/history">지난 축제 보기</a>
-            <a class="btn ghost" href="/homedelivery">공연 다시보기</a>
+          <p class="display hero-big">CCAF<br />{site.next.year}</p>
+          <div class="hero-foot">
+            <p class="hero-date">{site.next.dates}, 춘천</p>
+            <p class="hero-msg">{site.next.message}</p>
+            <div class="btns">
+              <a class="btn" href="/history">지난 축제</a>
+              <a class="btn ghost" href="/homedelivery">공연 다시보기</a>
+            </div>
           </div>
-        </div>
-        <figure class="hero-visual">
-          <img src={cur.keyVisual} alt={`${cur.year} 춘천공연예술제 포스터`} />
-          <figcaption>{cur.year} 춘천공연예술제 : {cur.title} {cur.subtitle}</figcaption>
-        </figure>
-      </div>
-    </section>
-  ) : (
-    <section class="hero hero-on">
-      <div class="wrap hero-grid">
-        <div class="hero-text">
+        </>
+      ) : (
+        <>
           <p class="eyebrow">제{cur.edition}회 춘천공연예술제</p>
-          <h1 class="hero-title">{cur.title}<span>{cur.subtitle}</span></h1>
-          <p class="display hero-dates">{cur.dates}</p>
-          <p class="hero-venues">{cur.venues}</p>
-          <div class="btns">
-            {mode === 'onsale' && <a class="btn accent" href={site.ticketUrl} target="_blank" rel="noopener">bookon에서 예매하기</a>}
-            <a class="btn" href="/program">프로그램 보기</a>
-            <a class="btn ghost" href="/festival">올해 축제 소개</a>
+          <h1 class="hero-title">{cur.title}<span class="display">{cur.subtitle}</span></h1>
+          <div class="hero-foot">
+            <p class="display hero-dates">{cur.dates}</p>
+            <p class="hero-msg">{cur.venues}</p>
+            <div class="btns">
+              {mode === 'onsale' && <a class="btn" href={site.ticketUrl} target="_blank" rel="noopener">bookon에서 예매</a>}
+              <a class={`btn ${mode === 'onsale' ? 'ghost' : ''}`} href="/program">프로그램</a>
+            </div>
           </div>
-        </div>
-        <figure class="hero-visual">
-          <img src={cur.keyVisual} alt={`${cur.year} 춘천공연예술제 포스터`} />
-        </figure>
-      </div>
-    </section>
-  )}
-
-  <div class="ticker" aria-hidden="true">
-    <div>
-      {Array.from({ length: 6 }).map(() => <span>십시일반 · TEN SPOONS MAKE A BOWL · 춘천공연예술제 · SINCE 2002 · </span>)}
+        </>
+      )}
     </div>
-  </div>
+    <figure class="hero-visual">
+      <img src={cur.keyVisual} alt={`${cur.year} 춘천공연예술제 포스터`} />
+      {off && <figcaption><span class="num">{cur.year}</span> {cur.title} {cur.subtitle} <a href="/festival">돌아보기 →</a></figcaption>}
+    </figure>
+  </section>
 
-  {mode !== 'offseason' && perfs.length > 0 && (
+  <section class="facts">
+    <div><p class="display">2002</p><p>춘천무용축제로 시작</p></div>
+    <div><p class="display">{cur.edition}회</p><p>{cur.year}년까지 이어온 여름</p></div>
+    <div><p class="display">{perfs.length}</p><p>{cur.year} 초청 작품</p></div>
+    <div><p class="display">{venues}</p><p>춘천 곳곳의 공연장</p></div>
+  </section>
+
+  {!off && perfs.length > 0 && (
     <section class="section">
       <div class="wrap">
-        <div class="section-head"><h2>{cur.year} 프로그램</h2><a class="more" href="/program">전체 보기</a></div>
+        <div class="section-head"><h2>{cur.year} 프로그램</h2><a class="more" href="/program">전체 {perfs.length}편</a></div>
         <div class="grid">{perfs.slice(0, 8).map((p) => <PerfCard p={p} />)}</div>
       </div>
     </section>
@@ -83,38 +82,41 @@ const now = new Date();
           })}
         </ul>
       </div>
-      <div class="join">
-        <h2>함께하기</h2>
-        <p>관객, 예술가, 스태프 모두가 한 숟가락씩 보태 만드는 축제입니다.</p>
-        <ul class="join-links">
-          <li><a href="/application"><b>작품 공모</b><span>매년 봄, 전 장르 공모</span></a></li>
-          <li><a href="/volunteers"><b>자원활동가</b><span>축제를 함께 운영해요</span></a></li>
-          <li><a href="/workshop"><b>무대기술워크숍</b><span>현장에서 배우는 무대기술</span></a></li>
-          <li><a href="/onebowl"><b>한그릇관객단</b><span>깊이 보는 시민 관객단</span></a></li>
-          <li><a href="/donation"><b>후원하기</b><span>마지막 숟가락이 되어주세요</span></a></li>
+      <div>
+        <div class="section-head"><h2>함께하기</h2></div>
+        <ul class="join">
+          <li><a href="/application"><b>작품 공모</b><span>매년 봄, 전 장르</span></a></li>
+          <li><a href="/volunteers"><b>자원활동가</b><span>축제를 함께 운영</span></a></li>
+          <li><a href="/workshop"><b>무대기술워크숍</b><span>현장에서 배우는 무대</span></a></li>
+          <li><a href="/onebowl"><b>한그릇관객단</b><span>깊이 보는 시민 관객</span></a></li>
+          <li><a href="/donation"><b>후원하기</b><span>마지막 한 숟가락</span></a></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <section class="section dark">
-    <div class="wrap">
-      <div class="section-head"><h2>홈딜리버리</h2><a class="more" href="/homedelivery">영상 아카이브</a></div>
-      <p class="lead">축제의 감동을 고화질 영상으로 전하는 찾아가는 공연예술 배달 서비스. 2020년부터 쌓아온 공연 영상을 언제든 다시 볼 수 있습니다.</p>
-      <div class="gallery" style="margin-top:32px">
-        {site.homeGallery.map((g) => <img src={g} alt="" loading="lazy" />)}
+  <section class="hd">
+    <div class="wrap hd-grid">
+      <div>
+        <p class="eyebrow">Home Delivery</p>
+        <h2>홈딜리버리</h2>
+        <p class="lead">축제의 감동을 고화질 영상으로 전하는 찾아가는 공연예술 배달 서비스. 2020년부터 쌓아온 공연 영상을 언제든 다시 볼 수 있습니다.</p>
+        <div class="btns"><a class="btn accent" href="/homedelivery">영상 아카이브</a></div>
+      </div>
+      <div class="hd-photos">
+        {site.homeGallery.slice(0, 4).map((g) => <img src={g} alt="" loading="lazy" />)}
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="wrap">
-      <div class="section-head"><h2>2002년부터, 스물다섯 번의 여름</h2><a class="more" href="/history">지난 축제</a></div>
+      <div class="section-head"><h2>스물다섯 번의 여름</h2><a class="more" href="/history">2002년부터 모두 보기</a></div>
       <div class="poster-strip">
         {festivals.map((f) => (
           <a href="/history" class="poster">
-            {f.data.poster && <img src={f.data.poster} alt={f.data.title} loading="lazy" />}
-            <span>{f.data.year}</span>
+            <div class="poster-img">{f.data.poster && <img src={f.data.poster} alt={f.data.title} loading="lazy" />}</div>
+            <span class="num">{f.data.year}</span>
           </a>
         ))}
       </div>
@@ -123,40 +125,58 @@ const now = new Date();
 </Base>
 
 <style>
-  .hero { padding: clamp(32px, 6vw, 80px) 0 clamp(40px, 6vw, 80px); }
-  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(24px, 5vw, 72px); align-items: center; }
-  .hero-year { font-size: clamp(96px, 17vw, 240px); color: var(--ink); margin: 0; }
-  .hero-date { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: clamp(22px, 3vw, 34px); margin: 18px 0 8px; color: var(--accent); text-transform: uppercase; }
-  .hero-title { font-size: clamp(64px, 11vw, 150px); line-height: .95; margin: 0 0 18px; }
-  .hero-title span { display: block; font-family: var(--display); font-stretch: 70%; font-weight: 800; font-size: .38em; color: var(--accent); letter-spacing: 0; margin-top: 10px; }
-  .hero-dates { font-size: clamp(36px, 6vw, 76px); margin: 0 0 8px; }
-  .hero-venues { font-weight: 600; color: var(--muted); margin: 0; }
-  .hero-visual { margin: 0; }
-  .hero-visual img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 20px; box-shadow: 0 30px 60px -20px rgb(0 0 0 / .35); background: color-mix(in srgb, var(--ink) 8%, transparent); }
-  .hero-visual figcaption { font-size: 14px; color: var(--muted); margin-top: 10px; }
-  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } .hero-visual { max-width: 420px; } }
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; min-height: min(calc(100vh - var(--header)), 860px); border-bottom: 1px solid var(--line); }
+  .hero-block { background: var(--accent); color: var(--accent-ink); padding: clamp(28px, 4vw, 56px) var(--gutter); display: flex; flex-direction: column; justify-content: space-between; gap: 32px; border-right: 1px solid var(--line); }
+  .hero-block .eyebrow::before { background: var(--accent-ink); }
+  .hero-big { font-size: clamp(110px, 17vw, 280px); margin: 0; }
+  .hero-title { font-size: clamp(72px, 10vw, 156px); line-height: .95; margin: 0; letter-spacing: -0.05em; }
+  .hero-title span { display: block; font-size: .42em; letter-spacing: -0.01em; margin-top: 14px; }
+  .hero-dates { font-size: clamp(34px, 4.6vw, 64px); margin: 0 0 8px; }
+  .hero-date { font-size: clamp(22px, 2.4vw, 32px); font-weight: 800; letter-spacing: -0.03em; margin: 0; }
+  .hero-msg { font-size: 18px; margin: 6px 0 0; font-weight: 500; }
+  .hero .btns { margin-top: 24px; }
+  .hero .btn.ghost { border-color: var(--accent-ink); color: var(--accent-ink); }
+  .hero .btn.ghost:hover { background: var(--accent-ink); color: var(--accent); }
+  .hero .btn:not(.ghost):hover { background: var(--paper); color: var(--ink); }
+  .hero-visual { margin: 0; position: relative; background: var(--soft); overflow: hidden; }
+  .hero-visual img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+  .hero-visual figcaption { position: absolute; left: 0; bottom: 0; background: var(--paper); border-top: 1px solid var(--line); border-right: 1px solid var(--line); padding: 10px 16px; font-size: 14px; font-weight: 600; }
+  .hero-visual figcaption a { margin-left: 8px; font-weight: 800; text-decoration: none; }
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: 0; }
+    .hero-block { border-right: 0; border-bottom: 1px solid var(--line); }
+    .hero-visual { aspect-ratio: 3/4; }
+    .hero-visual img { object-position: center top; }
+  }
 
-  .ticker { background: var(--accent); color: #fff; overflow: hidden; white-space: nowrap; padding: 12px 0; font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 20px; letter-spacing: .02em; }
-  .ticker > div { display: inline-block; animation: tick 60s linear infinite; }
-  @keyframes tick { to { transform: translateX(-50%); } }
-  @media (prefers-reduced-motion: reduce) { .ticker > div { animation: none; } }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+  .facts div { padding: 24px var(--gutter); border-right: 1px solid var(--line); }
+  .facts div:last-child { border-right: 0; }
+  .facts .display { font-size: clamp(44px, 5vw, 72px); margin: 0 0 6px; }
+  .facts p:last-child { margin: 0; font-weight: 600; color: var(--muted); font-size: 15px; }
+  @media (max-width: 700px) { .facts { grid-template-columns: 1fr 1fr; } .facts div:nth-child(2) { border-right: 0; } .facts div:nth-child(-n+2) { border-bottom: 1px solid var(--line); } }
 
-  .two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 80px); }
+  .two-col { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(32px, 5vw, 72px); }
   @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
-  .join { background: var(--ink); color: var(--paper); border-radius: 24px; padding: 32px; }
-  .join p { opacity: .8; margin: 0 0 18px; }
-  .join-links { list-style: none; margin: 0; padding: 0; }
-  .join-links a { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent); text-decoration: none; color: var(--paper); align-items: baseline; }
-  .join-links a:hover b { color: var(--accent); }
-  .join-links span { font-size: 14px; opacity: .65; text-align: right; }
+  .join { list-style: none; margin: 0; padding: 0; }
+  .join a { display: flex; justify-content: space-between; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--hair); text-decoration: none; align-items: baseline; transition: background .15s, padding .15s; }
+  .join a:hover { background: var(--accent); color: var(--accent-ink); padding: 18px 12px; }
+  .join b { font-size: 19px; letter-spacing: -0.02em; }
+  .join span { font-size: 14px; color: var(--muted); }
+  .join a:hover span { color: inherit; }
 
-  .dark { background: var(--ink); color: var(--paper); }
-  .dark .more { color: var(--paper); }
+  .hd { background: var(--ink); color: var(--paper); padding: clamp(56px, 7vw, 104px) 0; }
+  .hd .eyebrow::before { background: var(--accent); }
+  .hd-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .hd-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .hd-photos img { aspect-ratio: 4/3; object-fit: cover; width: 100%; }
+  @media (max-width: 900px) { .hd-grid { grid-template-columns: 1fr; } }
 
-  .poster-strip { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
+  .poster-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
   .poster { text-decoration: none; }
-  .poster img { aspect-ratio: 3/4; object-fit: cover; width: 100%; border-radius: 10px; background: color-mix(in srgb, var(--ink) 8%, transparent); transition: transform .2s; }
-  .poster:hover img { transform: translateY(-4px); }
-  .poster span { display: block; font-family: var(--display); font-weight: 800; margin-top: 6px; }
-  @media (max-width: 900px) { .poster-strip { grid-template-columns: repeat(4, 1fr); } }
+  .poster-img { aspect-ratio: 3/4; overflow: hidden; background: var(--soft); border: 1px solid var(--line); }
+  .poster img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .poster:hover img { transform: scale(1.05); }
+  .poster span { display: block; font-weight: 800; margin-top: 8px; font-size: 20px; }
+  @media (max-width: 900px) { .poster-strip { grid-template-columns: repeat(3, 1fr); } }
 </style>

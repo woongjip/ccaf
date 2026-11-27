@@ -23,7 +23,10 @@ content:
         label: 올해 색상
         type: object
         fields:
-          - { name: accent, label: 포인트 색 (포스터 대표색), type: string, description: "예: #ff4f2b" }
+          - { name: accent, label: 포인트 색 1 (포스터 대표색, 버튼·블록 배경), type: string, description: "예: #f6fa70" }
+          - { name: accentInk, label: 포인트 색 위 글자색 (밝은 포인트면 #111111, 어두우면 #ffffff), type: string }
+          - { name: accent2, label: 포인트 색 2 (작은 표식), type: string }
+          - { name: highlight, label: 흰 바탕 위 강조 글자색 (진한 색), type: string }
           - { name: ink, label: 글자/진한 배경 색, type: string }
           - { name: paper, label: 바탕 색, type: string }
       - name: current
