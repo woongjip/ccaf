@@ -3,17 +3,18 @@
   ─ 주색   소양 네이비  #0B2238  호수의 밤, 공연이 시작되는 어둠. 글자·로고·진한 면
   ─ 시그니처 커튼콜 코랄 #FF6B4A  무대 조명과 박수의 온기. 넓은 면·버튼·태그 배경에만 (글자색 금지)
   ─ 보조   깊은 호수   #0B3D5C  어두운 섹션 배경, 코랄과 짝
-  ─ 보조   호수 블루   #0B5F8A  링크·강조 글자·포커스 (미색 위 대비 6:1 이상)
+  ─ 로고   CCAF 블루   #0068B7  공식 로고 심볼 색(AI 원본). 링크·강조 글자·포커스 (미색 위 대비 5:1 이상)
   ─ 바탕   무대 미색   #F4F1EA  기본 배경 (순백 대신 종이 질감)
   ─ 중립   안개 #E6E4DE(soft) · 물안개 선(hair) · 회색 글자(muted) — 모두 네이비에서 파생
   사용 비율 가이드: 미색 60 · 네이비 30 · 코랄 10. 코랄 위 글자는 항상 네이비.
+  로고: 공식 로고 그대로(심볼 #0068B7, 글자 #595757). 어두운 바탕은 _w, 코랄·사진 위는 _ww(전체 흰색). 색 변경·변형 금지.
   포스터·공연 사진은 이 색 체계 '안에' 액자처럼 놓이고, 사이트 색을 바꾸지 않는다.
 */
 :root {
   --c-navy: #0b2238;
   --c-coral: #ff6b4a;
   --c-deep: #0b3d5c;
-  --c-lake: #0b5f8a;
+  --c-blue: #0068b7; /* 공식 로고 심볼 색 */
   --c-paper: #f4f1ea;
 
   --ink: var(--c-navy);
@@ -21,7 +22,7 @@
   --accent: var(--c-coral);
   --accent-ink: var(--c-navy);
   --accent2: var(--c-deep);
-  --hl: var(--c-lake);
+  --hl: var(--c-blue);
   --soft: color-mix(in srgb, var(--ink) 6%, var(--paper));
   --line: var(--ink);
   --hair: color-mix(in srgb, var(--ink) 16%, transparent);
@@ -56,8 +57,8 @@ a:hover { text-decoration-thickness: 2px; }
 .site-header { position: sticky; top: 0; z-index: 50; background: var(--paper); border-bottom: 1px solid var(--line); }
 .bar { height: var(--header); display: flex; align-items: stretch; padding: 0 0 0 var(--gutter); }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto; }
-.brand-ko { font-weight: 800; font-size: 18px; letter-spacing: -0.03em; }
-.brand-en { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 13px; letter-spacing: .04em; background: var(--accent); color: var(--accent-ink); padding: 1px 6px; }
+.brand-logo { height: 36px; width: auto; }
+@media (max-width: 560px) { .brand-logo { height: 28px; } }
 .gnb ul { list-style: none; margin: 0; padding: 0; }
 .gnb, .gnb > ul { display: flex; height: 100%; }
 .gnb-item { position: relative; display: flex; }
@@ -92,7 +93,7 @@ a:hover { text-decoration-thickness: 2px; }
   .gnb-flat li { border-bottom: 1px solid var(--line); }
   .gnb-flat .gnb-top { pointer-events: auto; color: var(--ink) !important; font-size: 22px; padding: 14px 0; }
 }
-@media (max-width: 560px) { .lang { display: none; } .btn-ticket { padding: 0 16px; } .brand-en { display: none; } }
+@media (max-width: 560px) { .lang { display: none; } .btn-ticket { padding: 0 16px; } }
 
 /* ---------- Typography ---------- */
 h1, h2, h3 { line-height: 1.18; letter-spacing: -0.035em; margin: 0 0 .5em; font-weight: 800; }
@@ -198,8 +199,9 @@ details.faq .a p { margin: 0 0 .8em; }
 .site-footer { background: var(--ink); color: var(--paper); padding: 64px 0 28px; font-size: 15px; }
 .site-footer a { color: var(--paper); }
 .footer-grid { display: grid; grid-template-columns: 1.3fr 1.6fr 1fr; gap: 40px; }
-.footer-title { font-weight: 800; font-size: 26px; margin: 0; letter-spacing: -0.03em; }
-.footer-sub { font-family: var(--display); font-size: 12px; letter-spacing: .1em; opacity: .6; margin: 6px 0 0; }
+.footer-logo { height: 46px; width: auto; }
+.footer-org { height: 30px; width: auto; display: block; margin-top: 8px; }
+.footer-sub { font-size: 12px; opacity: .6; margin: 28px 0 0; }
 .footer-contact p { margin: 0 0 4px; opacity: .85; }
 .footer-social { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; align-content: start; font-weight: 700; }
 .footer-social a { text-decoration: none; } .footer-social a:hover { color: var(--accent); }

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { NAV_KO, NAV_EN } from '../components/Nav';
 import site from '../data/site.json';
+import Logo from '../components/Logo.astro';
 
 interface Props {
   title?: string;
@@ -35,6 +36,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   <meta property="og:description" content={desc} />
   <meta property="og:image" content={ogImage} />
   <meta property="og:url" content={canonical} />
+  <meta name="theme-color" content="#0b2238" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="naver-site-verification" content="075bd3637dd609247828607634b7d9895bbdbc9f" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -51,8 +53,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   <header class="site-header">
     <div class="bar">
       <a class="brand" href={lang === 'en' ? '/en' : '/'} aria-label={siteName}>
-        <span class="brand-ko">{lang === 'en' ? 'Chuncheon Arts Festival' : '춘천공연예술제'}</span>
-        <span class="brand-en">CCAF</span>
+        <Logo class="brand-logo" />
       </a>
       <nav class="gnb" aria-label="주 메뉴">
         {lang === 'ko' ? (
@@ -85,8 +86,9 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   <footer class="site-footer">
     <div class="wrap footer-grid">
       <div>
-        <p class="footer-title">{lang === 'en' ? 'Chuncheon Arts Festival' : '춘천공연예술제'}</p>
-        <p class="footer-sub">CHUNCHEON ARTS FESTIVAL · {lang === 'en' ? 'organised by Ten Spoons' : '주최·주관 사단법인 텐스푼'}</p>
+        <Logo class="footer-logo" variant="w" />
+        <p class="footer-sub">{lang === 'en' ? 'Organised by' : '주최·주관'}</p>
+        <img class="footer-org" src="/brand/tenspoons-h-w.svg" alt={lang === 'en' ? 'Ten Spoons Association' : '사단법인 텐스푼'} width="180" height="32" />
       </div>
       <div class="footer-contact">
         <p>{site.contact.address}</p>
