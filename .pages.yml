@@ -1,0 +1,194 @@
+# Pages CMS 설정 (https://app.pagescms.org 에서 GitHub 계정으로 로그인해 편집)
+media:
+  input: public/images/uploads
+  output: /images/uploads
+
+content:
+  - name: settings
+    label: ⚙️ 사이트 설정 (올해 축제·시즌 모드)
+    type: file
+    path: src/data/site.json
+    format: json
+    fields:
+      - name: mode
+        label: 홈 화면 모드
+        type: select
+        description: "비시즌 = 내년 축제 예고 / 발표 = 올해 축제·프로그램 공개 / 예매중 = 예매 버튼 강조"
+        options:
+          values:
+            - { value: offseason, label: 비시즌 (다음 축제 예고) }
+            - { value: announce, label: 발표 (프로그램 공개) }
+            - { value: onsale, label: 예매중 }
+      - name: theme
+        label: 올해 색상
+        type: object
+        fields:
+          - { name: accent, label: 포인트 색 (포스터 대표색), type: string, description: "예: #ff4f2b" }
+          - { name: ink, label: 글자/진한 배경 색, type: string }
+          - { name: paper, label: 바탕 색, type: string }
+      - name: current
+        label: 올해(가장 최근) 축제
+        type: object
+        fields:
+          - { name: year, label: 연도, type: number }
+          - { name: edition, label: 회차, type: number }
+          - { name: title, label: 주제, type: string }
+          - { name: subtitle, label: 영문 부제, type: string }
+          - { name: dates, label: 기간 (표시용), type: string }
+          - { name: startDate, label: 시작일, type: date }
+          - { name: endDate, label: 종료일, type: date }
+          - { name: venues, label: 공연장, type: string }
+          - { name: keyVisual, label: 포스터/키비주얼, type: image }
+          - { name: keyVisualCredit, label: 포스터 크레딧, type: string }
+          - { name: programBook, label: 프로그램북 링크, type: string }
+          - { name: programBookEn, label: 영문 프로그램북 링크, type: string }
+          - { name: sponsorImage, label: 후원 로고 이미지, type: image }
+      - name: next
+        label: 다음 축제 (비시즌 홈 화면)
+        type: object
+        fields:
+          - { name: year, label: 연도, type: number }
+          - { name: edition, label: 회차, type: number }
+          - { name: dates, label: 예정 기간, type: string }
+          - { name: message, label: 안내 문구, type: string }
+      - { name: ticketUrl, label: 기본 예매 링크 (bookon), type: string }
+      - name: contact
+        label: 사무국 연락처
+        type: object
+        fields:
+          - { name: phone, label: 전화, type: string }
+          - { name: email, label: 이메일, type: string }
+          - { name: hours, label: 운영 시간, type: string }
+          - { name: address, label: 주소, type: string }
+      - name: homeGallery
+        label: 홈 화면 사진
+        type: image
+        list: true
+
+  - name: festival-intro
+    label: 📝 올해 축제 소개글
+    type: file
+    path: src/content/festival-intro.md
+    fields:
+      - { name: body, label: 본문, type: rich-text }
+
+  - name: notices
+    label: 📢 공지사항
+    type: collection
+    path: src/content/notices
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      fields: [title, date, pinned]
+      primary: title
+      sort: [date]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: 제목, type: string, required: true }
+      - { name: date, label: 게시일, type: date, required: true }
+      - { name: pinned, label: 상단 고정, type: boolean, default: false }
+      - { name: deadline, label: 모집 마감일 (있으면 '모집중/마감' 표시), type: date }
+      - { name: image, label: 포스터 이미지, type: image }
+      - name: attachments
+        label: 첨부파일
+        type: object
+        list: true
+        fields:
+          - { name: label, label: 파일 이름, type: string }
+          - { name: file, label: 파일, type: file }
+      - { name: body, label: 본문, type: rich-text }
+
+  - name: performances
+    label: 🎭 공연 (프로그램)
+    type: collection
+    path: src/content/performances
+    filename: "{fields.year}-{primary}.md"
+    view:
+      fields: [title, artist, genre, year]
+      primary: title
+      default: { sort: year, order: desc }
+    fields:
+      - { name: year, label: 축제 연도, type: number, required: true }
+      - { name: title, label: 작품명, type: string, required: true }
+      - { name: artist, label: 단체/아티스트, type: string, required: true }
+      - name: genre
+        label: 장르
+        type: select
+        options:
+          values:
+            - { value: dance, label: 무용 }
+            - { value: music, label: 음악 }
+            - { value: theater, label: 연극 }
+            - { value: kids, label: 어린이 }
+            - { value: etc, label: 기타 }
+      - { name: venue, label: 공연장, type: string }
+      - { name: sessions, label: 공연 일시 (예 2027-08-10T19:30), type: string, list: true }
+      - { name: image, label: 대표 이미지, type: image }
+      - { name: ticketUrl, label: bookon 공연 페이지 링크, type: string }
+      - { name: order, label: 정렬 순서, type: number }
+      - { name: body, label: 작품 소개 (선택), type: rich-text }
+
+  - name: festivals
+    label: 🗂 지난 축제
+    type: collection
+    path: src/content/festivals
+    view:
+      fields: [title, year]
+      primary: title
+      default: { sort: year, order: desc }
+    fields:
+      - { name: year, label: 연도, type: number }
+      - { name: sort, label: 정렬값 (보통 연도와 같게), type: number }
+      - { name: title, label: 축제명, type: string }
+      - { name: period, label: 기간, type: string }
+      - { name: poster, label: 포스터, type: image }
+      - { name: link, label: 관련 링크 (선택), type: string }
+
+  - name: faq
+    label: ❓ 자주 묻는 질문
+    type: collection
+    path: src/content/faq
+    view:
+      fields: [question, category]
+      primary: question
+    fields:
+      - { name: question, label: 질문, type: string }
+      - name: category
+        label: 분류
+        type: select
+        options: { values: [예매, 작품 공모, 축제, 기타] }
+      - { name: order, label: 정렬 순서, type: number }
+      - { name: body, label: 답변, type: rich-text }
+
+  - name: pages
+    label: 📄 일반 페이지 (소개·참여·후원 등)
+    type: collection
+    path: src/content/pages
+    subfolders: true
+    view:
+      fields: [title]
+      primary: title
+    fields:
+      - { name: title, label: 제목, type: string }
+      - { name: eyebrow, label: 영문 소제목, type: string }
+      - { name: lead, label: 요약 문장, type: text }
+      - { name: hero, label: 대표 이미지, type: image }
+      - { name: gallery, label: 사진 슬라이드, type: image, list: true }
+      - name: buttons
+        label: 버튼
+        type: object
+        list: true
+        fields:
+          - { name: label, label: 버튼 글자, type: string }
+          - { name: url, label: 링크, type: string }
+      - { name: notice, label: 안내 박스 (예 '모집 마감'), type: string }
+      - { name: body, label: 본문, type: rich-text }
+
+  - name: videos
+    label: 🎬 홈딜리버리 영상
+    type: file
+    path: src/data/videos.json
+    format: json
+    list: true
+    fields:
+      - { name: year, label: 연도, type: number }
+      - { name: ids, label: 유튜브 영상 ID (주소의 v= 뒤 11자리), type: string, list: true }

@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { getCollection } from 'astro:content';
+import { fmtDate } from '../../lib/util';
+const all = (await getCollection('notices')).sort((a, b) => Number(b.data.pinned) - Number(a.data.pinned) || +b.data.date - +a.data.date);
+const now = new Date();
+---
+<Base title="공지사항">
+  <PageHead eyebrow="Notice" title="공지사항" />
+  <section class="section"><div class="wrap">
+    <ul class="list">
+      {all.map((n) => {
+        const open = n.data.deadline && n.data.deadline >= now;
+        return <li><a href={`/notice/${n.id}`}><span class="t">{n.data.pinned && <span class="badge" style="background:var(--ink)">공지</span>}{n.data.deadline && <span class={`badge ${open ? '' : 'closed'}`}>{open ? '모집중' : '마감'}</span>}{n.data.title}</span><span class="d">{fmtDate(n.data.date)}</span></a></li>;
+      })}
+    </ul>
+  </div></section>
+</Base>

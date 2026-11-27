@@ -1,0 +1,50 @@
+{
+  "mode": "offseason",
+  "theme": { "accent": "#ff4f2b", "ink": "#16183a", "paper": "#f6f3ee" },
+  "current": {
+    "year": 2026,
+    "edition": 25,
+    "title": "환희",
+    "subtitle": "Runner's High",
+    "dates": "2026. 8. 11. 화 – 8. 15. 토",
+    "startDate": "2026-08-11",
+    "endDate": "2026-08-15",
+    "venues": "축제극장몸짓, 성암교회, 봄내극장, 담작은도서관",
+    "keyVisual": "/images/6a267f7621cc5_1920.jpg",
+    "keyVisualCredit": "포스터 사진: 2025 춘천공연예술제 선정작 <Beyond the Algorithm> Breakthrough (사진 우종덕)",
+    "programBook": "https://heyzine.com/flip-book/39d6a3e151.html",
+    "programBookEn": "https://heyzine.com/flip-book/fbd19d4f1d.html",
+    "sponsorImage": "/images/6a2a568636316_1920.jpeg"
+  },
+  "next": {
+    "year": 2027,
+    "edition": 26,
+    "dates": "2027년 8월",
+    "message": "더욱 풍성하고 더 나은 축제로 찾아오겠습니다."
+  },
+  "ticketUrl": "https://bookon.kr/shows",
+  "contact": {
+    "phone": "033-251-0545",
+    "email": "ccaf@hanmail.net",
+    "hours": "평일 10:00–18:00 (점심 12:00–13:00)",
+    "address": "강원특별자치도 춘천시 후석로 420번길 7, 511호 (후평동, 춘천하이테크타워) 24232"
+  },
+  "social": {
+    "youtube": "https://www.youtube.com/user/chuncheonartsfest",
+    "naverTv": "https://tv.naver.com/ccaf",
+    "instagram": "https://www.instagram.com/ccafestival/",
+    "facebook": "https://www.facebook.com/ccafestival",
+    "kakao": "http://pf.kakao.com/_gUxaHxb",
+    "blog": "https://blog.naver.com/ccafestival"
+  },
+  "homeGallery": [
+    "/images/6a8e7c38b438f_800.jpg",
+    "/images/6a8e7c8fc9ffc_800.jpg",
+    "/images/6a8e7bdf91c06_800.jpg",
+    "/images/6a8e7bdf95395_800.jpg",
+    "/images/6a8e7c0c421b4_800.jpg",
+    "/images/6a8e7bad10087_800.jpeg",
+    "/images/6a8e7bcfde20e_800.jpeg",
+    "/images/6a8e7bdf9406f_800.jpg"
+  ]
+}

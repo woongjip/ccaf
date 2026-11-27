@@ -1,0 +1,19 @@
+---
+import { GENRES, fmtSession } from '../lib/util';
+const { p, lang = 'ko' } = Astro.props;
+const d = p.data;
+const g = GENRES[d.genre];
+---
+<article class="perf" data-genre={d.genre}>
+  {d.image && <img class="perf-img" src={d.image} alt="" loading="lazy" />}
+  <div class="perf-body">
+    <span class="chip">{lang === 'en' ? g.en : g.ko}</span>
+    <h3>{d.title}</h3>
+    <p class="artist">{d.artist}</p>
+    <p class="meta">{d.sessions.map(fmtSession).join(' / ')}<br />{d.venue}</p>
+    <div class="perf-actions">
+      <a class="tix" href={d.ticketUrl ?? 'https://bookon.kr/shows'} target="_blank" rel="noopener">{lang === 'en' ? 'Tickets' : '예매하기'}</a>
+      <a href={`/program/${p.id}.ics`} download aria-label={`${d.title} 캘린더에 추가`}>{lang === 'en' ? '+ Calendar' : '+ 캘린더'}</a>
+    </div>
+  </div>
+</article>

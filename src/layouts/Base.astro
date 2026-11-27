@@ -1,0 +1,141 @@
+---
+import '../styles/global.css';
+import { NAV_KO, NAV_EN } from '../components/Nav';
+import site from '../data/site.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  lang?: 'ko' | 'en';
+  jsonld?: object | object[];
+}
+const { title, description, image, lang = 'ko', jsonld } = Astro.props;
+const siteName = lang === 'en' ? 'Chuncheon Arts Festival' : '춘천공연예술제';
+const fullTitle = title ? `${title} | ${siteName}` : `${siteName} Chuncheon Arts Festival`;
+const desc = description ?? (lang === 'en'
+  ? 'Chuncheon Arts Festival — a performing arts festival built on the spirit of "ten spoons make a bowl", every August in Chuncheon, Korea.'
+  : '십시일반 마음을 모아 만드는 순수 공연예술 축제, 춘천공연예술제 공식 홈페이지입니다.');
+const ogImage = new URL(image ?? site.current.keyVisual, Astro.site).toString();
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
+const t = site.theme;
+---
+<!doctype html>
+<html lang={lang} style={`--accent:${t.accent};--ink:${t.ink};--paper:${t.paper}`}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={desc} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={siteName} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={desc} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:url" content={canonical} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="naver-site-verification" content="075bd3637dd609247828607634b7d9895bbdbc9f" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="sitemap" href="/sitemap.xml" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" />
+  {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
+</head>
+<body>
+  <a class="skip" href="#main">{lang === 'en' ? 'Skip to content' : '본문 바로가기'}</a>
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href={lang === 'en' ? '/en' : '/'} aria-label={siteName}>
+        <span class="brand-ko">{lang === 'en' ? 'Chuncheon Arts Festival' : '춘천공연예술제'}</span>
+        <span class="brand-en">CCAF {site.current.year}</span>
+      </a>
+      <nav class="gnb" aria-label="주 메뉴">
+        {lang === 'ko' ? (
+          <ul>
+            {NAV_KO.map((g) => (
+              <li class="gnb-item">
+                <button class="gnb-top" aria-expanded="false">{g.label}</button>
+                <ul class="gnb-sub">
+                  {g.items.map((i) => <li><a href={i.href} aria-current={isActive(i.href) ? 'page' : undefined}>{i.label}</a></li>)}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <ul class="gnb-flat">
+            {NAV_EN.map((i) => <li><a class="gnb-top" href={i.href} aria-current={isActive(i.href) ? 'page' : undefined}>{i.label}</a></li>)}
+          </ul>
+        )}
+      </nav>
+      <div class="bar-actions">
+        <a class="lang" href={lang === 'en' ? '/' : '/en'} lang={lang === 'en' ? 'ko' : 'en'}>{lang === 'en' ? '한국어' : 'EN'}</a>
+        <a class="btn-ticket" href={site.ticketUrl} target="_blank" rel="noopener">{lang === 'en' ? 'Tickets' : '예매하기'}</a>
+        <button class="menu-toggle" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main"><slot /></main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <p class="footer-title">{lang === 'en' ? 'Chuncheon Arts Festival' : '춘천공연예술제'}</p>
+        <p class="footer-sub">CHUNCHEON ARTS FESTIVAL · {lang === 'en' ? 'organised by Ten Spoons' : '주최·주관 사단법인 텐스푼'}</p>
+      </div>
+      <div class="footer-contact">
+        <p>{site.contact.address}</p>
+        <p><a href={`tel:${site.contact.phone}`}>{site.contact.phone}</a> · <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
+        <p>{site.contact.hours}</p>
+      </div>
+      <ul class="footer-social">
+        <li><a href={site.social.instagram} target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href={site.social.youtube} target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href={site.social.facebook} target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href={site.social.blog} target="_blank" rel="noopener">Blog</a></li>
+        <li><a href={site.social.kakao} target="_blank" rel="noopener">KakaoTalk</a></li>
+      </ul>
+    </div>
+    <div class="wrap footer-bottom">
+      <span>© 춘천공연예술제 CHUNCHEON ARTS FESTIVAL</span>
+      <span><a href="/privacy">개인정보처리방침</a></span>
+    </div>
+  </footer>
+
+  <script>
+    const header = document.querySelector('.site-header')!;
+    const toggle = document.querySelector('.menu-toggle')!;
+    toggle.addEventListener('click', () => {
+      const open = header.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    document.querySelectorAll<HTMLButtonElement>('.gnb-top[aria-expanded]').forEach((b) => {
+      b.addEventListener('click', () => {
+        const li = b.parentElement!;
+        const was = li.classList.contains('show');
+        document.querySelectorAll('.gnb-item.show').forEach((x) => { x.classList.remove('show'); x.querySelector('button')?.setAttribute('aria-expanded', 'false'); });
+        if (!was) { li.classList.add('show'); b.setAttribute('aria-expanded', 'true'); }
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!(e.target as Element).closest('.gnb-item')) document.querySelectorAll('.gnb-item.show').forEach((x) => x.classList.remove('show'));
+    });
+    // 이미지 이전 전 미리보기용: 로컬 /images 가 없으면 기존 QUV CDN 원본을 보여줌
+    document.querySelectorAll<HTMLImageElement>('img[src^="/images/"]').forEach((img) => {
+      const fallback = () => {
+        if (img.dataset.fb) return; img.dataset.fb = '1';
+        const p = img.getAttribute('src')!.replace('/images/', '');
+        img.src = p.startsWith('board/') ? `https://cdn.quv.kr/k98f4jpyd/board/image/${p.slice(6)}` : `https://cdn.quv.kr/k98f4jpyd/up/${p}`;
+      };
+      if (img.complete && img.naturalWidth === 0) fallback(); else img.addEventListener('error', fallback);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import PerfCard from '../../components/PerfCard.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../../lib/util';
+const year = site.current.year;
+const perfs = (await getCollection('performances')).filter((p) => p.data.year === year).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title={`Programme ${year}`} lang="en">
+  <PageHead eyebrow={`Festival ${year}`} title={`Programme ${year}`} lead={`${site.current.subtitle} · August 11–15, ${year} · Chuncheon`}>
+    <div class="btns">
+      <a class="btn accent" href={site.ticketUrl} target="_blank" rel="noopener">Tickets on bookon</a>
+      {site.current.programBookEn && <a class="btn ghost" href={site.current.programBookEn} target="_blank" rel="noopener">English Program Book</a>}
+    </div>
+  </PageHead>
+  <section class="section"><div class="wrap"><div class="grid">{perfs.map((p) => <PerfCard p={p} lang="en" />)}</div></div></section>
+</Base>

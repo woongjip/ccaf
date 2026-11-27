@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import PerfCard from '../components/PerfCard.astro';
+import { getCollection } from 'astro:content';
+import { site, GENRES } from '../lib/util';
+
+const year = site.current.year;
+const perfs = (await getCollection('performances')).filter((p) => p.data.year === year).sort((a, b) => a.data.order - b.data.order);
+const genres = [...new Set(perfs.map((p) => p.data.genre))];
+const jsonld = perfs.flatMap((p) => p.data.sessions.map((s) => ({
+  '@context': 'https://schema.org', '@type': 'Event',
+  name: `${p.data.artist} <${p.data.title}>`,
+  startDate: `${s}:00+09:00`,
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: { '@type': 'Place', name: p.data.venue, address: '춘천시, 강원특별자치도' },
+  image: p.data.image ? new URL(p.data.image, Astro.site).toString() : undefined,
+  performer: { '@type': 'PerformingGroup', name: p.data.artist },
+  organizer: { '@type': 'Organization', name: '춘천공연예술제', url: 'https://ccaf.or.kr' },
+  offers: { '@type': 'Offer', url: p.data.ticketUrl ?? site.ticketUrl },
+})));
+---
+<Base title={`${year} 프로그램`} jsonld={jsonld}>
+  <PageHead eyebrow={`Programme ${year}`} title={`${year} 프로그램`} lead={`${site.current.dates} · ${site.current.venues}`}>
+    <div class="btns">
+      <a class="btn accent" href={site.ticketUrl} target="_blank" rel="noopener">bookon에서 예매하기</a>
+      <a class="btn ghost" href="/schedule">날짜별 일정 보기</a>
+    </div>
+  </PageHead>
+  <section class="section">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label="장르 필터">
+        <button aria-pressed="true" data-g="all">전체 {perfs.length}</button>
+        {genres.map((g) => <button aria-pressed="false" data-g={g}>{GENRES[g].ko} {perfs.filter((p) => p.data.genre === g).length}</button>)}
+      </div>
+      <div class="grid" id="perfs">{perfs.map((p) => <PerfCard p={p} />)}</div>
+      <p class="hint">가격, 좌석, 관람 연령, 취소·환불 규정은 각 공연의 bookon 예매 페이지에서 확인하실 수 있습니다.</p>
+    </div>
+  </section>
+</Base>
+<style>.hint { color: var(--muted); font-size: 15px; margin-top: 32px; }</style>
+<script>
+  const btns = document.querySelectorAll<HTMLButtonElement>('.filters button');
+  btns.forEach((b) => b.addEventListener('click', () => {
+    btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    document.querySelectorAll<HTMLElement>('#perfs .perf').forEach((c) => {
+      c.hidden = b.dataset.g !== 'all' && c.dataset.genre !== b.dataset.g;
+    });
+  }));
+</script>

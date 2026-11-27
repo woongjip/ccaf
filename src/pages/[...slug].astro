@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  return (await getCollection('pages')).map((p) => ({ params: { slug: p.id }, props: { p } }));
+}
+const { p } = Astro.props;
+const d = p.data;
+const lang = p.id.startsWith('en/') ? 'en' : 'ko';
+const { Content } = await render(p);
+---
+<Base title={d.title} description={d.lead} image={d.hero} lang={lang}>
+  <PageHead eyebrow={d.eyebrow} title={d.title} lead={d.lead}>
+    {d.buttons.length > 0 && (
+      <div class="btns">{d.buttons.map((b, i) => <a class={`btn ${i === 0 ? 'accent' : 'ghost'}`} href={b.url} target={b.url.startsWith('http') ? '_blank' : undefined} rel="noopener">{b.label}</a>)}</div>
+    )}
+  </PageHead>
+  {d.gallery.length > 0 && <section class="section" style="padding-bottom:0"><div class="wrap"><div class="gallery">{d.gallery.map((g) => <img src={g} alt="" loading="lazy" />)}</div></div></section>}
+  <section class="section">
+    <div class="wrap">
+      {d.notice && <p class="notice-box">{d.notice}</p>}
+      <div class="prose"><Content /></div>
+    </div>
+  </section>
+</Base>

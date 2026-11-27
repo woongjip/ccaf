@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../lib/util';
+const cur = site.current;
+const perfs = (await getCollection('performances')).filter((p) => p.data.year === cur.year).sort((a, b) => a.data.order - b.data.order);
+const { Content } = await import('../content/festival-intro.md');
+---
+<Base title={`${cur.year} 춘천공연예술제`}>
+  <section class="fest">
+    <div class="wrap fest-grid">
+      <div>
+        <p class="eyebrow">Festival {cur.year} · 제{cur.edition}회</p>
+        <h1>{cur.title}<span>{cur.subtitle}</span></h1>
+        <dl class="facts">
+          <div><dt>기간</dt><dd>{cur.dates}</dd></div>
+          <div><dt>장소</dt><dd>{cur.venues}</dd></div>
+        </dl>
+        <div class="btns">
+          <a class="btn" href="/program">프로그램 보기</a>
+          {cur.programBook && <a class="btn ghost" href={cur.programBook} target="_blank" rel="noopener">프로그램북</a>}
+          {cur.programBookEn && <a class="btn ghost" href={cur.programBookEn} target="_blank" rel="noopener">ENG Program Book</a>}
+          <a class="btn ghost" href="/contact">오시는 길</a>
+        </div>
+      </div>
+      <figure><img src={cur.keyVisual} alt="" /><figcaption>{cur.keyVisualCredit}</figcaption></figure>
+    </div>
+  </section>
+  <section class="section"><div class="wrap prose"><Content /></div></section>
+  <section class="section">
+    <div class="wrap">
+      <h2>참여 단체</h2>
+      <ul class="artists">{perfs.map((p) => <li>{p.data.image && <img src={p.data.image} alt="" loading="lazy" />}<span>{p.data.artist}</span></li>)}</ul>
+      {cur.sponsorImage && <><h2 style="margin-top:64px">후원</h2><img class="sponsor" src={cur.sponsorImage} alt="후원 및 협력 기관 로고" loading="lazy" /></>}
+    </div>
+  </section>
+</Base>
+<style>
+  .fest { padding: clamp(40px, 7vw, 96px) 0; border-bottom: 1px solid var(--line); }
+  .fest-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(24px, 5vw, 72px); align-items: center; }
+  h1 { font-size: clamp(64px, 11vw, 150px); line-height: .95; }
+  h1 span { display: block; font-family: var(--display); font-stretch: 70%; font-size: .38em; color: var(--accent); margin-top: 10px; }
+  .facts { display: grid; gap: 10px; margin: 24px 0 0; }
+  .facts div { display: flex; gap: 16px; } .facts dt { font-weight: 800; width: 3em; flex: none; } .facts dd { margin: 0; }
+  figure { margin: 0; } figure img { border-radius: 20px; width: 100%; aspect-ratio: 3/4; object-fit: cover; }
+  figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .artists { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+  .artists img { aspect-ratio: 1; object-fit: cover; width: 100%; border-radius: 50%; margin-bottom: 8px; background: color-mix(in srgb, var(--ink) 8%, transparent); }
+  .artists span { font-weight: 700; display: block; text-align: center; }
+  .sponsor { margin-top: 20px; background: #fff; border-radius: 16px; padding: 16px; }
+  @media (max-width: 860px) { .fest-grid { grid-template-columns: 1fr; } }
+</style>

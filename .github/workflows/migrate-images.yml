@@ -1,0 +1,18 @@
+name: 기존 사이트 이미지 가져오기 (1회용)
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node scripts/migrate-images.mjs
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add public/images
+          git diff --cached --quiet || git commit -m "기존 QUV 사이트 이미지 이전"
+          git push

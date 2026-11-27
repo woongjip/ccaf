@@ -1,0 +1,162 @@
+---
+import Base from '../layouts/Base.astro';
+import PerfCard from '../components/PerfCard.astro';
+import { getCollection } from 'astro:content';
+import { site, fmtDate } from '../lib/util';
+
+const mode = site.mode; // offseason | announce | onsale
+const cur = site.current;
+const notices = (await getCollection('notices')).sort((a, b) => +b.data.date - +a.data.date).slice(0, 4);
+const perfs = (await getCollection('performances')).filter((p) => p.data.year === cur.year).sort((a, b) => a.data.order - b.data.order);
+const festivals = (await getCollection('festivals')).sort((a, b) => b.data.sort - a.data.sort).slice(0, 8);
+const now = new Date();
+---
+<Base>
+  {mode === 'offseason' ? (
+    <section class="hero hero-off">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <p class="eyebrow">제{site.next.edition}회 춘천공연예술제</p>
+          <p class="display hero-year">CCAF<br />{site.next.year}</p>
+          <p class="hero-date">{site.next.dates} · 춘천</p>
+          <p class="lead">{site.next.message}</p>
+          <div class="btns">
+            <a class="btn" href="/history">지난 축제 보기</a>
+            <a class="btn ghost" href="/homedelivery">공연 다시보기</a>
+          </div>
+        </div>
+        <figure class="hero-visual">
+          <img src={cur.keyVisual} alt={`${cur.year} 춘천공연예술제 포스터`} />
+          <figcaption>{cur.year} 춘천공연예술제 : {cur.title} {cur.subtitle}</figcaption>
+        </figure>
+      </div>
+    </section>
+  ) : (
+    <section class="hero hero-on">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <p class="eyebrow">제{cur.edition}회 춘천공연예술제</p>
+          <h1 class="hero-title">{cur.title}<span>{cur.subtitle}</span></h1>
+          <p class="display hero-dates">{cur.dates}</p>
+          <p class="hero-venues">{cur.venues}</p>
+          <div class="btns">
+            {mode === 'onsale' && <a class="btn accent" href={site.ticketUrl} target="_blank" rel="noopener">bookon에서 예매하기</a>}
+            <a class="btn" href="/program">프로그램 보기</a>
+            <a class="btn ghost" href="/festival">올해 축제 소개</a>
+          </div>
+        </div>
+        <figure class="hero-visual">
+          <img src={cur.keyVisual} alt={`${cur.year} 춘천공연예술제 포스터`} />
+        </figure>
+      </div>
+    </section>
+  )}
+
+  <div class="ticker" aria-hidden="true">
+    <div>
+      {Array.from({ length: 6 }).map(() => <span>십시일반 · TEN SPOONS MAKE A BOWL · 춘천공연예술제 · SINCE 2002 · </span>)}
+    </div>
+  </div>
+
+  {mode !== 'offseason' && perfs.length > 0 && (
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head"><h2>{cur.year} 프로그램</h2><a class="more" href="/program">전체 보기</a></div>
+        <div class="grid">{perfs.slice(0, 8).map((p) => <PerfCard p={p} />)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="wrap two-col">
+      <div>
+        <div class="section-head"><h2>소식</h2><a class="more" href="/notice">공지사항</a></div>
+        <ul class="list">
+          {notices.map((n) => {
+            const open = n.data.deadline && n.data.deadline >= now;
+            return (
+              <li><a href={`/notice/${n.id}`}>
+                <span class="t">{n.data.deadline && <span class={`badge ${open ? '' : 'closed'}`}>{open ? '모집중' : '마감'}</span>}{n.data.title}</span>
+                <span class="d">{fmtDate(n.data.date)}</span>
+              </a></li>
+            );
+          })}
+        </ul>
+      </div>
+      <div class="join">
+        <h2>함께하기</h2>
+        <p>관객, 예술가, 스태프 모두가 한 숟가락씩 보태 만드는 축제입니다.</p>
+        <ul class="join-links">
+          <li><a href="/application"><b>작품 공모</b><span>매년 봄, 전 장르 공모</span></a></li>
+          <li><a href="/volunteers"><b>자원활동가</b><span>축제를 함께 운영해요</span></a></li>
+          <li><a href="/workshop"><b>무대기술워크숍</b><span>현장에서 배우는 무대기술</span></a></li>
+          <li><a href="/onebowl"><b>한그릇관객단</b><span>깊이 보는 시민 관객단</span></a></li>
+          <li><a href="/donation"><b>후원하기</b><span>마지막 숟가락이 되어주세요</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark">
+    <div class="wrap">
+      <div class="section-head"><h2>홈딜리버리</h2><a class="more" href="/homedelivery">영상 아카이브</a></div>
+      <p class="lead">축제의 감동을 고화질 영상으로 전하는 찾아가는 공연예술 배달 서비스. 2020년부터 쌓아온 공연 영상을 언제든 다시 볼 수 있습니다.</p>
+      <div class="gallery" style="margin-top:32px">
+        {site.homeGallery.map((g) => <img src={g} alt="" loading="lazy" />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><h2>2002년부터, 스물다섯 번의 여름</h2><a class="more" href="/history">지난 축제</a></div>
+      <div class="poster-strip">
+        {festivals.map((f) => (
+          <a href="/history" class="poster">
+            {f.data.poster && <img src={f.data.poster} alt={f.data.title} loading="lazy" />}
+            <span>{f.data.year}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding: clamp(32px, 6vw, 80px) 0 clamp(40px, 6vw, 80px); }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(24px, 5vw, 72px); align-items: center; }
+  .hero-year { font-size: clamp(96px, 17vw, 240px); color: var(--ink); margin: 0; }
+  .hero-date { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: clamp(22px, 3vw, 34px); margin: 18px 0 8px; color: var(--accent); text-transform: uppercase; }
+  .hero-title { font-size: clamp(64px, 11vw, 150px); line-height: .95; margin: 0 0 18px; }
+  .hero-title span { display: block; font-family: var(--display); font-stretch: 70%; font-weight: 800; font-size: .38em; color: var(--accent); letter-spacing: 0; margin-top: 10px; }
+  .hero-dates { font-size: clamp(36px, 6vw, 76px); margin: 0 0 8px; }
+  .hero-venues { font-weight: 600; color: var(--muted); margin: 0; }
+  .hero-visual { margin: 0; }
+  .hero-visual img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 20px; box-shadow: 0 30px 60px -20px rgb(0 0 0 / .35); background: color-mix(in srgb, var(--ink) 8%, transparent); }
+  .hero-visual figcaption { font-size: 14px; color: var(--muted); margin-top: 10px; }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } .hero-visual { max-width: 420px; } }
+
+  .ticker { background: var(--accent); color: #fff; overflow: hidden; white-space: nowrap; padding: 12px 0; font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 20px; letter-spacing: .02em; }
+  .ticker > div { display: inline-block; animation: tick 60s linear infinite; }
+  @keyframes tick { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .ticker > div { animation: none; } }
+
+  .two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 80px); }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+  .join { background: var(--ink); color: var(--paper); border-radius: 24px; padding: 32px; }
+  .join p { opacity: .8; margin: 0 0 18px; }
+  .join-links { list-style: none; margin: 0; padding: 0; }
+  .join-links a { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent); text-decoration: none; color: var(--paper); align-items: baseline; }
+  .join-links a:hover b { color: var(--accent); }
+  .join-links span { font-size: 14px; opacity: .65; text-align: right; }
+
+  .dark { background: var(--ink); color: var(--paper); }
+  .dark .more { color: var(--paper); }
+
+  .poster-strip { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
+  .poster { text-decoration: none; }
+  .poster img { aspect-ratio: 3/4; object-fit: cover; width: 100%; border-radius: 10px; background: color-mix(in srgb, var(--ink) 8%, transparent); transition: transform .2s; }
+  .poster:hover img { transform: translateY(-4px); }
+  .poster span { display: block; font-family: var(--display); font-weight: 800; margin-top: 6px; }
+  @media (max-width: 900px) { .poster-strip { grid-template-columns: repeat(4, 1fr); } }
+</style>

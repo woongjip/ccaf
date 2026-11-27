@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import videos from '../data/videos.json';
+import { site } from '../lib/util';
+---
+<Base title="홈딜리버리">
+  <PageHead eyebrow="Home Delivery" title="홈딜리버리" lead="찾아가는 공연예술 배달 서비스. 언제 어디서나 온라인으로 축제를 즐길 수 있도록 팬데믹 위기 속에서 시작된 비대면 공연입니다.">
+    <div class="btns">
+      <a class="btn" href={site.social.youtube} target="_blank" rel="noopener">YouTube 채널</a>
+      <a class="btn ghost" href={site.social.naverTv} target="_blank" rel="noopener">네이버TV</a>
+    </div>
+  </PageHead>
+  <section class="section">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label="연도">
+        {videos.map((v, i) => <button aria-pressed={i === 0 ? 'true' : 'false'} data-y={v.year}>{v.year}</button>)}
+      </div>
+      {videos.map((v, i) => (
+        <div class="vids" data-y={v.year} hidden={i !== 0}>
+          {v.ids.map((id) => (
+            <a class="vid" href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noopener" data-id={id}>
+              <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" />
+              <span class="play" aria-hidden="true">▶</span>
+            </a>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>
+<style>
+  .vids { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .vid { position: relative; display: block; border-radius: 14px; overflow: hidden; aspect-ratio: 16/9; background: #000; }
+  .vid img, .vid iframe { width: 100%; height: 100%; object-fit: cover; border: 0; }
+  .play { position: absolute; inset: auto auto 12px 12px; background: var(--accent); color: #fff; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 16px; }
+</style>
+<script>
+  const btns = document.querySelectorAll<HTMLButtonElement>('.filters button');
+  btns.forEach((b) => b.addEventListener('click', () => {
+    btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    document.querySelectorAll<HTMLElement>('.vids').forEach((v) => (v.hidden = v.dataset.y !== b.dataset.y));
+  }));
+  // 클릭하면 페이지 안에서 재생 (가벼운 썸네일 → 필요할 때만 유튜브 로드)
+  document.querySelectorAll<HTMLAnchorElement>('.vid').forEach((a) => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    a.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${a.dataset.id}?autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="영상"></iframe>`;
+  }));
+</script>

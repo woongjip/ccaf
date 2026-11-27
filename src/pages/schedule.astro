@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { getCollection } from 'astro:content';
+import { site, GENRES, parseSession } from '../lib/util';
+
+const year = site.current.year;
+const perfs = (await getCollection('performances')).filter((p) => p.data.year === year);
+const rows = perfs.flatMap((p) => p.data.sessions.map((s) => ({ s, p })));
+rows.sort((a, b) => a.s.localeCompare(b.s) || a.p.data.order - b.p.data.order);
+const days = new Map<string, typeof rows>();
+for (const r of rows) { const d = r.s.split('T')[0]; if (!days.has(d)) days.set(d, []); days.get(d)!.push(r); }
+const dayList = [...days].map(([d, list]) => {
+  const slots = new Map<string, typeof rows>();
+  for (const r of list) { const k = r.s + '|' + r.p.data.venue; if (!slots.has(k)) slots.set(k, []); slots.get(k)!.push(r); }
+  return { p: parseSession(d + 'T00:00'), slots: [...slots.values()] };
+});
+---
+<Base title={`${year} 공연 일정`}>
+  <PageHead eyebrow={`Schedule ${year}`} title={`${year} 공연 일정`} lead={site.current.dates} />
+  <section class="section">
+    <div class="wrap">
+      {dayList.map(({ p, slots }) => {
+        return (
+          <div class="day">
+            <h2 class="day-h"><span class="display">{p.m}.{p.day}</span> {p.wd}</h2>
+            <div class="slots">
+              {slots.map((items) => (
+                <div class="slot">
+                  <p class="slot-time display">{items[0].s.split('T')[1]}</p>
+                  <p class="slot-venue"><span class="chip">{GENRES[items[0].p.data.genre].ko}</span> {items[0].p.data.venue}</p>
+                  <ul>{items.map((r) => <li><b>{r.p.data.artist}</b> &lt;{r.p.data.title}&gt;</li>)}</ul>
+                  <a class="slot-tix" href={items[0].p.data.ticketUrl ?? site.ticketUrl} target="_blank" rel="noopener">예매하기 →</a>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+</Base>
+<style>
+  .day { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 28px 0; border-top: 2px solid var(--ink); }
+  .day-h { margin: 0; font-size: 22px; }
+  .day-h .display { font-size: 64px; display: block; color: var(--accent); }
+  .slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .slot { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+  .slot-time { font-size: 36px; margin: 0; }
+  .slot-venue { margin: 6px 0 10px; font-weight: 700; }
+  .slot-venue .chip { color: var(--accent); margin-right: 4px; }
+  .slot ul { margin: 0 0 12px; padding: 0; list-style: none; line-height: 1.6; }
+  .slot-tix { font-weight: 800; text-decoration: none; }
+  @media (max-width: 700px) { .day { grid-template-columns: 1fr; } .day-h .display { display: inline; font-size: 48px; } }
+</style>

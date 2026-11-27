@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { getCollection, render } from 'astro:content';
+const all = (await getCollection('faq')).filter((f) => f.data.lang === 'ko').sort((a, b) => a.data.order - b.data.order);
+const cats = [...new Set(all.map((f) => f.data.category))];
+const items = await Promise.all(all.map(async (f) => ({ f, Content: (await render(f)).Content })));
+const jsonld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: all.map((f) => ({ '@type': 'Question', name: f.data.question, acceptedAnswer: { '@type': 'Answer', text: f.body } })) };
+---
+<Base title="자주 묻는 질문" jsonld={jsonld}>
+  <PageHead eyebrow="FAQ" title="자주 묻는 질문" lead="예매 관련 상세 문의는 bookon 예매 페이지에서도 확인하실 수 있습니다." />
+  <section class="section"><div class="wrap narrow">
+    {cats.map((c) => (
+      <div style="margin-bottom:56px">
+        <h2>{c}</h2>
+        {items.filter((i) => i.f.data.category === c).map(({ f, Content }) => (
+          <details class="faq"><summary>{f.data.question}</summary><div class="a"><Content /></div></details>
+        ))}
+      </div>
+    ))}
+  </div></section>
+</Base>
