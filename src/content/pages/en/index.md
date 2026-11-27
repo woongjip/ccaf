@@ -24,7 +24,7 @@ In 2021, the festival expanded its finance and size in order to grow into one of
 | --- | --- |
 | 2017 – 2024 | Selected by Arts Council Korea for the Creator Support Program (Dance) and as an outstanding festival (Dance) |
 | 2021 | Korean name changed to the "Chuncheon Performing Arts Festival" (English name unchanged) |
-| 2020 | 2020 festival · Launch of the online channel "Home Delivery" (YouTube, Naver TV) |
+| 2020 | 2020 festival · Launch of the online channel "Home Delivery" (YouTube) |
 | 2019 | Founding of Ten Spoons as a non-profit corporation |
 | 2012 | Designated as a specialized performing arts organization of Gangwon-do |
 | 2004 | Renamed "Chuncheon Arts Festival" |

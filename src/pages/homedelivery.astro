@@ -8,7 +8,6 @@ import { site } from '../lib/util';
   <PageHead eyebrow="Home Delivery" title="홈딜리버리" lead="찾아가는 공연예술 배달 서비스. 언제 어디서나 온라인으로 축제를 즐길 수 있도록 팬데믹 위기 속에서 시작된 비대면 공연입니다.">
     <div class="btns">
       <a class="btn" href={site.social.youtube} target="_blank" rel="noopener">YouTube 채널</a>
-      <a class="btn ghost" href={site.social.naverTv} target="_blank" rel="noopener">네이버TV</a>
     </div>
   </PageHead>
   <section class="section">
@@ -28,11 +27,18 @@ import { site } from '../lib/util';
       ))}
     </div>
   </section>
+  <dialog class="player" aria-label="영상 재생"><div class="player-box"></div><button class="player-x" type="button" aria-label="닫기">✕</button></dialog>
 </Base>
 <style>
+  .vids[hidden] { display: none; }
   .vids { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
   .vid { position: relative; display: block;  overflow: hidden; aspect-ratio: 16/9; background: #000; }
   .vid img, .vid iframe { width: 100%; height: 100%; object-fit: cover; border: 0; }
+  .vid:hover img { opacity: .85; }
+  .player { border: 0; padding: 0; width: min(1100px, 94vw); background: #000; }
+  .player::backdrop { background: rgba(11, 34, 56, .92); }
+  .player-box { aspect-ratio: 16/9; } .player-box iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .player-x { position: fixed; top: 12px; right: 12px; width: 48px; height: 48px; background: none; border: 1px solid rgba(255,255,255,.5); color: #fff; font-size: 20px; cursor: pointer; }
   .play { position: absolute; inset: auto auto 12px 12px; background: var(--accent); color: #fff; width: 44px; height: 44px;  display: grid; place-items: center; font-size: 16px; }
 </style>
 <script>
@@ -41,9 +47,16 @@ import { site } from '../lib/util';
     btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     document.querySelectorAll<HTMLElement>('.vids').forEach((v) => (v.hidden = v.dataset.y !== b.dataset.y));
   }));
-  // 클릭하면 페이지 안에서 재생 (가벼운 썸네일 → 필요할 때만 유튜브 로드)
+  // 클릭하면 큰 창에서 재생하고, 목록의 썸네일은 그대로 둠
+  const dlg = document.querySelector<HTMLDialogElement>('.player')!;
+  const box = dlg.querySelector('.player-box')!;
+  const close = () => { dlg.close(); };
+  dlg.addEventListener('close', () => { box.innerHTML = ''; });
+  dlg.querySelector('.player-x')!.addEventListener('click', close);
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
   document.querySelectorAll<HTMLAnchorElement>('.vid').forEach((a) => a.addEventListener('click', (e) => {
     e.preventDefault();
-    a.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${a.dataset.id}?autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="영상"></iframe>`;
+    box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${a.dataset.id}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="영상"></iframe>`;
+    dlg.showModal();
   }));
 </script>
