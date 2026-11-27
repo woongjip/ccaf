@@ -1,0 +1,19 @@
+name: 기존 사이트 지난 축제 아카이브 가져오기 (1회용)
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm i --no-save node-html-parser sharp
+      - run: node scripts/migrate-history.mjs
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add migration public/images/archive
+          git diff --cached --quiet || git commit -m "기존 사이트 지난 축제 아카이브 데이터·사진 이전"
+          git pull --rebase && git push
