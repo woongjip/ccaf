@@ -26,12 +26,18 @@ const pageIds = [...new Set([...histHtml.matchAll(/["'](\/\d{1,4})["']/g)].map((
 // data-link 가 비어 있으면, 후보 페이지를 열어 제목으로 연결
 const candidates = {};
 for (const id of pageIds.filter((x) => !['/6', '/10', '/45', '/23', '/169', '/152', '/49'].includes(x))) {
-  try { const h = await (await get(BASE + id)).text(); candidates[id] = clean((parse(h).querySelector('#doz_body') || parse(h)).innerHTML).slice(0, 4000); } catch {}
+  try { const h = await (await get(BASE + id)).text(); candidates[id] = clean(parse(h).querySelector('body').innerHTML); } catch {}
 }
 for (const it of items) {
   if (/\/\d+/.test(it.link)) continue;
-  const hit = Object.entries(candidates).find(([, t]) => t.includes(it.title));
+  const hit = Object.entries(candidates).find(([, t]) => t.includes('\n' + it.title + '\n') || t.includes('목록으로') && t.includes(it.title));
   if (hit) it.link = hit[0];
+}
+// 지난 축제 목록에 없는 연도 페이지(예: 2025, 2026)도 추가
+for (const [id, t] of Object.entries(candidates)) {
+  if (items.some((it) => it.link === id)) continue;
+  const m = t.match(/\n(20\d\d (?:춘천|텐스푼)[^\n]{2,30})\n/);
+  if (m) items.push({ link: id, title: m[1], desc: '', poster: '' });
 }
 const years = [];
 const images = new Map(); // id.ext → { kind }

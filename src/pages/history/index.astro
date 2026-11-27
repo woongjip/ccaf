@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../../lib/util';
+const fests = (await getCollection('festivals')).sort((a, b) => b.data.sort - a.data.sort);
+---
+<Base title="지난 축제">
+  <PageHead eyebrow="History" title="지난 축제" lead={`2002년 춘천무용축제에서 시작해 스물다섯 번의 여름을 지나왔습니다. ${site.next.year}년 제${site.next.edition}회 축제로 다시 찾아오겠습니다.`} />
+  <section class="section">
+    <div class="wrap">
+      <ol class="archive">
+        {fests.map((f) => (
+          <li>
+            <a href={`/history/${f.id}`}><img src={f.data.poster} alt={`${f.data.title} 포스터`} loading="lazy" /></a>
+            <p class="y display">{f.data.year}</p>
+            <p class="n"><a href={`/history/${f.id}`}>{f.data.title}</a></p>
+            {f.data.period && <p class="p">{f.data.period}</p>}
+            {f.data.programBook && <p class="pb"><a href={f.data.programBook} target="_blank" rel="noopener">프로그램북</a>{f.data.programBookEn && <> · <a href={f.data.programBookEn} target="_blank" rel="noopener">ENG</a></>}</p>}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Base>
+<style>
+  .archive { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 36px 24px; }
+  .archive img { aspect-ratio: 3/4; object-fit: cover; width: 100%;  background: var(--soft); }
+  .y { font-size: 44px; margin: 12px 0 2px; color: var(--hl); }
+  .n { font-weight: 800; margin: 0; line-height: 1.4; }
+  .p { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
+  .pb { font-size: 14px; font-weight: 800; margin: 6px 0 0; }
+</style>
