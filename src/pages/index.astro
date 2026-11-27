@@ -18,7 +18,7 @@ const off = mode === 'offseason';
     <div class="hero-block">
       {off ? (
         <>
-          <p class="eyebrow">제{site.next.edition}회 춘천공연예술제</p>
+          <p class="eyebrow">{site.next.year} 춘천공연예술제</p>
           <p class="display hero-big">CCAF<br />{site.next.year}</p>
           <div class="hero-foot">
             <p class="hero-date">{site.next.dates}, 춘천</p>
@@ -31,7 +31,7 @@ const off = mode === 'offseason';
         </>
       ) : (
         <>
-          <p class="eyebrow">제{cur.edition}회 춘천공연예술제</p>
+          <p class="eyebrow">{cur.year} 춘천공연예술제</p>
           <h1 class="hero-title">{cur.title}<span class="display">{cur.subtitle}</span></h1>
           <div class="hero-foot">
             <p class="display hero-dates">{cur.dates}</p>
@@ -52,7 +52,7 @@ const off = mode === 'offseason';
 
   <section class="facts">
     <div><p class="display">2002</p><p>춘천무용축제로 시작</p></div>
-    <div><p class="display">{cur.edition}회</p><p>{cur.year}년까지 이어온 여름</p></div>
+    <div><p class="display">8월</p><p>매년 여름, 춘천에서</p></div>
     <div><p class="display">{perfs.length}</p><p>{cur.year} 초청 작품</p></div>
     <div><p class="display">{venues}</p><p>춘천 곳곳의 공연장</p></div>
   </section>
@@ -111,7 +111,7 @@ const off = mode === 'offseason';
 
   <section class="section">
     <div class="wrap">
-      <div class="section-head"><h2>스물다섯 번의 여름</h2><a class="more" href="/history">2002년부터 모두 보기</a></div>
+      <div class="section-head"><h2>지난 여름들</h2><a class="more" href="/history">2002년부터 모두 보기</a></div>
       <div class="poster-strip">
         {festivals.map((f) => (
           <a href={`/history/${f.id}`} class="poster">

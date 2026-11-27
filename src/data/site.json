@@ -2,7 +2,6 @@
   "mode": "offseason",
   "current": {
     "year": 2026,
-    "edition": 25,
     "title": "환희",
     "subtitle": "Runner's High",
     "dates": "2026. 8. 11. 화 – 8. 15. 토",
@@ -17,7 +16,6 @@
   },
   "next": {
     "year": 2027,
-    "edition": 26,
     "dates": "2027년 8월",
     "message": "더욱 풍성하고 더 나은 축제로 찾아오겠습니다."
   },

@@ -6,7 +6,7 @@ import { site } from '../../lib/util';
 const fests = (await getCollection('festivals')).sort((a, b) => b.data.sort - a.data.sort);
 ---
 <Base title="지난 축제">
-  <PageHead eyebrow="History" title="지난 축제" lead={`2002년 춘천무용축제에서 시작해 스물다섯 번의 여름을 지나왔습니다. ${site.next.year}년 제${site.next.edition}회 축제로 다시 찾아오겠습니다.`} />
+  <PageHead eyebrow="History" title="지난 축제" lead={`2002년 춘천무용축제에서 시작해 매년 여름 춘천에서 이어져 왔습니다. ${site.next.year} 춘천공연예술제로 다시 찾아오겠습니다.`} />
   <section class="section">
     <div class="wrap">
       <ol class="archive">

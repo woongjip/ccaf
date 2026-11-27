@@ -16,7 +16,7 @@ The spirit of the festival is summarized as **"십시일반" — ten spoons of r
 
 From 2002 (when the festival started as the Chuncheon Dance Festival) to 2011, the festival took place annually on the outdoor stage of Chuncheon Children's Center (today's KT&G Sangsang Madang Chuncheon), designed by the late architect Kim Su-geun. Later on, the festival moved to Chuncheon's major venues including the Festival Theater Mime, every August. Today the festival provides its performers and staff with fair remuneration, while keeping its conviction that ten spoons of rice fill a bowl.
 
-Celebrating its 20th anniversary in 2021, the festival expanded its finance and size in order to grow into one of Korea's representative arts festivals. In the middle of hot summer in Chuncheon, Chuncheon Arts Festival is waiting for you.
+In 2021, the festival expanded its finance and size in order to grow into one of Korea's representative arts festivals. In the middle of hot summer in Chuncheon, Chuncheon Arts Festival is waiting for you.
 
 ## History
 
@@ -24,7 +24,7 @@ Celebrating its 20th anniversary in 2021, the festival expanded its finance and 
 | --- | --- |
 | 2017 – 2024 | Selected by Arts Council Korea for the Creator Support Program (Dance) and as an outstanding festival (Dance) |
 | 2021 | Korean name changed to the "Chuncheon Performing Arts Festival" (English name unchanged) |
-| 2020 | The 19th festival · Launch of the online channel "Home Delivery" (YouTube, Naver TV) |
+| 2020 | 2020 festival · Launch of the online channel "Home Delivery" (YouTube, Naver TV) |
 | 2019 | Founding of Ten Spoons as a non-profit corporation |
 | 2012 | Designated as a specialized performing arts organization of Gangwon-do |
 | 2004 | Renamed "Chuncheon Arts Festival" |

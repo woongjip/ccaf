@@ -24,7 +24,6 @@ content:
         type: object
         fields:
           - { name: year, label: 연도, type: number }
-          - { name: edition, label: 회차, type: number }
           - { name: title, label: 주제, type: string }
           - { name: subtitle, label: 영문 부제, type: string }
           - { name: dates, label: 기간 (표시용), type: string }
@@ -41,7 +40,6 @@ content:
         type: object
         fields:
           - { name: year, label: 연도, type: number }
-          - { name: edition, label: 회차, type: number }
           - { name: dates, label: 예정 기간, type: string }
           - { name: message, label: 안내 문구, type: string }
       - { name: ticketUrl, label: 기본 예매 링크 (bookon), type: string }
