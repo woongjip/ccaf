@@ -129,6 +129,7 @@ const progLines = lines(d.program).map((l) => l.trim()).filter(Boolean).map((l) 
   .fh-tabs a:hover { background: var(--ink); color: var(--paper); }
 
   .line { border-top: 1px solid var(--line); }
+  section[id] { scroll-margin-top: calc(var(--header) + 60px); }
   .two { display: grid; grid-template-columns: 240px 1fr; gap: clamp(20px, 4vw, 56px); }
   .two h2 { margin: 0; font-size: 26px; }
   @media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
