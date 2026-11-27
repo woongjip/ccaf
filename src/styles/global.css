@@ -1,18 +1,18 @@
 /*
   CCAF 디자인 시스템
-  - 바탕(흰/검정)은 매년 고정, 포인트 색(accent, accent2)만 그해 포스터에서 뽑아 교체
+  - 기본 팔레트 'B안 호수와 코랄': 딥네이비(호수) + 코랄 + 미색. 매년 같은 색으로 운영
   - accent  : 넓은 면(블록·버튼 배경)에만 사용. 글자색으로 쓰지 않음
   - hl      : 흰 바탕 위 글자로 쓸 수 있는 진한 강조색 (명도 대비 4.5:1 이상)
 */
 :root {
-  --ink: #111111;
-  --paper: #ffffff;
-  --accent: #f6fa70;
-  --accent-ink: #111111;
-  --accent2: #54e1ff;
-  --hl: #00739a;
-  --soft: #f3f3f0;
-  --line: #111111;
+  --ink: #0b2238;
+  --paper: #f4f1ea;
+  --accent: #ff6b4a;
+  --accent-ink: #0b2238;
+  --accent2: #0b3d5c;
+  --hl: #0b5f8a;
+  --soft: color-mix(in srgb, var(--ink) 6%, var(--paper));
+  --line: var(--ink);
   --hair: color-mix(in srgb, var(--ink) 16%, transparent);
   --muted: color-mix(in srgb, var(--ink) 60%, var(--paper));
   --sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
