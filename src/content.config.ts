@@ -49,6 +49,8 @@ const festivals = defineCollection({
     period: z.string().default(''),
     poster: z.string().optional(),
     link: z.string().optional(),
+    programBook: z.string().optional(),
+    programBookEn: z.string().optional(),
   }),
 });
 

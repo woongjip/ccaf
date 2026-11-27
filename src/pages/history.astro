@@ -16,6 +16,7 @@ const fests = (await getCollection('festivals')).sort((a, b) => b.data.sort - a.
             <p class="y display">{f.data.year}</p>
             <p class="n">{f.data.title}</p>
             {f.data.period && <p class="p">{f.data.period}</p>}
+            {f.data.programBook && <p class="pb"><a href={f.data.programBook} target="_blank" rel="noopener">프로그램북</a>{f.data.programBookEn && <> · <a href={f.data.programBookEn} target="_blank" rel="noopener">ENG</a></>}</p>}
           </li>
         ))}
       </ol>
@@ -28,4 +29,5 @@ const fests = (await getCollection('festivals')).sort((a, b) => b.data.sort - a.
   .y { font-size: 44px; margin: 12px 0 2px; color: var(--accent); }
   .n { font-weight: 800; margin: 0; line-height: 1.4; }
   .p { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
+  .pb { font-size: 14px; font-weight: 800; margin: 6px 0 0; }
 </style>

@@ -142,6 +142,8 @@ content:
       - { name: period, label: 기간, type: string }
       - { name: poster, label: 포스터, type: image }
       - { name: link, label: 관련 링크 (선택), type: string }
+      - { name: programBook, label: 프로그램북 링크 (국문), type: string }
+      - { name: programBookEn, label: 프로그램북 링크 (영문), type: string }
 
   - name: faq
     label: ❓ 자주 묻는 질문
